@@ -4,6 +4,7 @@ import { NavigationProp, useNavigation } from '@react-navigation/native';
 
 type RootStackParamList = {
   'group-order': undefined;
+  'explore' : undefined;
 }
 
 
@@ -22,7 +23,7 @@ const navigation = useNavigation<NavigationProp<RootStackParamList>>();
           <Text style={styles.headerText}>Welcome to SSH!</Text>
         </View>
 
-  {/* Feature Section */}
+  {/* Group order Section */}
   <View style={styles.featureSection}>
   <Text style={styles.featureTitle}>Group Order</Text>
   <Text style={styles.featureDescription}>
@@ -35,6 +36,20 @@ const navigation = useNavigation<NavigationProp<RootStackParamList>>();
     <Text style={styles.actionButtonText}>Start a Group Order</Text>
   </TouchableOpacity>
   </View>
+
+  {/* Explore section*/}
+  <View style={styles.featureSection}>
+          <Text style={styles.featureTitle}>Explore SSH Features</Text>
+          <Text style={styles.featureDescription}>
+            Discover SSH's smart solutions tailored for student life. Learn more about how we make living in student accommodations smarter and more efficient.
+          </Text>
+          <TouchableOpacity
+            style={styles.actionButton}
+            onPress={() => navigation.navigate('explore')}
+          >
+            <Text style={styles.actionButtonText}>Explore More</Text>
+          </TouchableOpacity>
+        </View>
   </ScrollView> 
   </SafeAreaView> 
   );
@@ -47,7 +62,6 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    justifyContent: 'center',
     alignItems: 'center',
     padding: 16,
   },
@@ -57,9 +71,9 @@ const styles = StyleSheet.create({
     color: '#1d3d47',
   },
   logo: { 
-    width: 50,
-    height: 50,
-    marginRight: 12,
+    width: 100,
+    height: 100,
+    marginRight: 8,
   },
   header: { 
     flexDirection: 'row',
