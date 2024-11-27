@@ -25,8 +25,7 @@ const navigation = useNavigation<NavigationProp<RootStackParamList>>();
           <Text style={styles.headerText}>Welcome to SSH!</Text>
           <TouchableOpacity
             style={styles.notificationIcon}
-            onPress={() => navigation.navigate('notifications')}
-          >
+            onPress={() => navigation.navigate('notifications')}>
           <Ionicons name="notifications-outline" size={28} color="#1d3d47"></Ionicons>
           </TouchableOpacity>
         </View>
@@ -78,7 +77,7 @@ const styles = StyleSheet.create({
   logo: { 
     width: 40,
     height: 40,
-    //resizeMode: 'contain',
+    resizeMode: 'contain',
   },
   header: {
     flexDirection: 'row', 
