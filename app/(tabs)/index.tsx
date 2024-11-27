@@ -1,20 +1,26 @@
 import React from 'react';
-import { View, Text, StyleSheet, SafeAreaView } from 'react-native';
+import { View, Text, StyleSheet, SafeAreaView, ScrollView, Image } from 'react-native';
 
 export default function HomeScreen() {
   return (
     <SafeAreaView style={styles.safeArea}>
-      <View style={styles.container}>
-        <Text style={styles.headerText}>Welcome to SSH!</Text>
-      </View>
-    </SafeAreaView>
+      <ScrollView contentContainerStyle={styles.container}>
+        {/* Header Section */}
+        <View style={styles.header}>
+          <Image
+            source={require('/Users/Fizan/Downloads/SshFrontEnd/SSH/assets/images/IMG_6604.jpg')}
+            style={styles.logo}
+          />
+          <Text style={styles.headerText}>Welcome to SSH!</Text>
+        </View>
+      </ScrollView> 
+    </SafeAreaView> 
   );
 }
-
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#f9f9f9',
+    backgroundColor: '#ffffff',
   },
   container: {
     flex: 1,
@@ -27,4 +33,15 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#1d3d47',
   },
-});
+  logo: { 
+    width: 50,
+    height: 50,
+    marginRight: 12,
+  },
+  header: { 
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 24,
+  }
+}
+);
