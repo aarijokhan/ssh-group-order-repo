@@ -1,10 +1,12 @@
 import React from 'react';
 import { View, Text, StyleSheet, SafeAreaView, ScrollView, Image, TouchableOpacity } from 'react-native';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { Ionicons } from '@expo/vector-icons';
 
 type RootStackParamList = {
   'group-order': undefined;
   'explore' : undefined;
+  'notifications': undefined;
 }
 
 
@@ -21,32 +23,33 @@ const navigation = useNavigation<NavigationProp<RootStackParamList>>();
             style={styles.logo}
           />
           <Text style={styles.headerText}>Welcome to SSH!</Text>
+          <TouchableOpacity
+            style={styles.notificationIcon}
+            onPress={() => navigation.navigate('notifications')}
+          >
+          <Ionicons name="notifications-outline" size={28} color="#1d3d47"></Ionicons>
+          </TouchableOpacity>
         </View>
 
   {/* Group order Section */}
   <View style={styles.featureSection}>
   <Text style={styles.featureTitle}>Group Order</Text>
-  <Text style={styles.featureDescription}>
-    Simplify your grocery shopping with flatmates. Create or join a group, share carts, and split costs effortlessly.
-  </Text>
+  <Text style={styles.featureDescription}>Simplify your grocery shopping with flatmates. Create or join a group, share carts, and split costs effortlessly.</Text>
   <TouchableOpacity
     style={styles.actionButton}
-    onPress={() => navigation.navigate('group-order')}
-  >
+    onPress={() => navigation.navigate('group-order')}>
     <Text style={styles.actionButtonText}>Start a Group Order</Text>
   </TouchableOpacity>
+  
   </View>
 
   {/* Explore section*/}
   <View style={styles.featureSection}>
           <Text style={styles.featureTitle}>Explore SSH Features</Text>
-          <Text style={styles.featureDescription}>
-            Discover SSH's smart solutions tailored for student life. Learn more about how we make living in student accommodations smarter and more efficient.
-          </Text>
+          <Text style={styles.featureDescription}>Discover SSH's smart solutions tailored for student life. Learn more about how we make living in student accommodations smarter and more efficient.</Text>
           <TouchableOpacity
             style={styles.actionButton}
-            onPress={() => navigation.navigate('explore')}
-          >
+            onPress={() => navigation.navigate('explore')}>
             <Text style={styles.actionButtonText}>Explore More</Text>
           </TouchableOpacity>
         </View>
@@ -66,19 +69,23 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   headerText: {
-    fontSize: 24,
+    fontSize: 20, 
     fontWeight: 'bold',
     color: '#1d3d47',
+    flex: 1,
+    textAlign: 'center',
   },
   logo: { 
-    width: 100,
-    height: 100,
-    marginRight: 8,
+    width: 40,
+    height: 40,
+    //resizeMode: 'contain',
   },
-  header: { 
-    flexDirection: 'row',
-    alignItems: 'center',
+  header: {
+    flexDirection: 'row', 
+    alignItems: 'center', 
+    justifyContent: 'space-between',
     marginBottom: 24,
+    paddingHorizontal: 16, 
   },
   featureSection: {
     backgroundColor: '#ffffff',
@@ -111,6 +118,11 @@ const styles = StyleSheet.create({
     color: '#ffffff',
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  notificationIcon: {
+    width: 24,
+    height: 24,
+    resizeMode: 'contain', 
   },
 }
 );
