@@ -1,7 +1,15 @@
 import React from 'react';
-import { View, Text, StyleSheet, SafeAreaView, ScrollView, Image } from 'react-native';
+import { View, Text, StyleSheet, SafeAreaView, ScrollView, Image, TouchableOpacity } from 'react-native';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
+
+type RootStackParamList = {
+  'group-order': undefined;
+}
+
 
 export default function HomeScreen() {
+const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <ScrollView contentContainerStyle={styles.container}>
@@ -13,10 +21,25 @@ export default function HomeScreen() {
           />
           <Text style={styles.headerText}>Welcome to SSH!</Text>
         </View>
-      </ScrollView> 
-    </SafeAreaView> 
+
+  {/* Feature Section */}
+  <View style={styles.featureSection}>
+  <Text style={styles.featureTitle}>Group Order</Text>
+  <Text style={styles.featureDescription}>
+    Simplify your grocery shopping with flatmates. Create or join a group, share carts, and split costs effortlessly.
+  </Text>
+  <TouchableOpacity
+    style={styles.actionButton}
+    onPress={() => navigation.navigate('group-order')}
+  >
+    <Text style={styles.actionButtonText}>Start a Group Order</Text>
+  </TouchableOpacity>
+  </View>
+  </ScrollView> 
+  </SafeAreaView> 
   );
 }
+
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
@@ -42,6 +65,38 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 24,
-  }
+  },
+  featureSection: {
+    backgroundColor: '#ffffff',
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 16,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 8,
+},
+  featureTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 8,
+    color: '#333333',
+  },
+  featureDescription: {
+    fontSize: 14,
+    color: '#666666',
+    marginBottom: 16,
+  },
+  actionButton: {
+    backgroundColor: '#1d3d47',
+    borderRadius: 8,
+    paddingVertical: 12,
+    alignItems: 'center',
+  },
+  actionButtonText: {
+    color: '#ffffff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
 }
 );
