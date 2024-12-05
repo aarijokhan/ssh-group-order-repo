@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, SafeAreaView, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, SafeAreaView, ScrollView, TouchableOpacity} from 'react-native';
 
 export default function ProfileScreen() {
     return (
@@ -15,6 +15,20 @@ export default function ProfileScreen() {
                     <Text style={styles.infoLabel}>Email: john.doe@example.com</Text>
                     <Text style={styles.infoLabel}>Room Number: 12B</Text>
                 </View>
+
+                <View style={styles.content}>
+                    <Text style={styles.sectionTitle}>Settings</Text>
+                    <TouchableOpacity style={styles.optionButton}>
+                        <Text style={styles.optionText}>Edit Profile</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.optionButton}>
+                        <Text style={styles.optionText}>Change Password</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.optionButton}>
+                        <Text style={styles.optionText}>Notification Settings</Text>
+                    </TouchableOpacity>
+                </View>
+
              </ScrollView>
         </SafeAreaView>
     )
@@ -64,7 +78,16 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: '#333333',
         marginBottom: 4,
+    },
+    optionButton: {
+        backgroundColor: '#1d3d47',
+        borderRadius: 8,
+        paddingVertical: 12,
+        paddingHorizontal: 16,
+        marginTop: 8,
+    },
+    optionText: {
+        
     }
-
 }
 );
