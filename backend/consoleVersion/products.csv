@@ -1,0 +1,95 @@
+name,price,category
+Chicken,8.99,Meat
+Beef,12.49,Meat
+Lamb,9.99,Meat
+Turkey,7.99,Meat
+Pork,6.99,Meat
+Bacon,5.49,Meat
+Ham,4.99,Meat
+Salmon,14.99,Meat
+Tuna,5.99,Meat
+Shrimp,12.99,Meat
+Sausage,4.49,Meat
+Clams,7.99,Meat
+Octopus,9.49,Meat
+Squid,6.49,Meat
+Steak,15.99,Meat
+Tomato,1.99,Vegetables
+Lettuce,2.49,Vegetables
+Carrot,1.49,Vegetables
+Potato,0.99,Vegetables
+Onion,0.79,Vegetables
+Pepper,1.29,Vegetables
+Spinach,2.99,Vegetables
+Broccoli,2.49,Vegetables
+Cucumber,1.19,Vegetables
+Zucchini,1.49,Vegetables
+Garlic,0.99,Vegetables
+Ginger,2.99,Vegetables
+Cabbage,1.29,Vegetables
+Squash,1.79,Vegetables
+Mushroom,2.49,Vegetables
+Milk,3.49,Dairy
+Cheese,4.99,Dairy
+Yogurt,2.99,Dairy
+Butter,3.79,Dairy
+Cream,2.49,Dairy
+Eggs,3.99,Dairy
+Ice Cream,4.49,Dairy
+Cottage Cheese,2.49,Dairy
+Whipped Cream,2.99,Dairy
+Butter Milk,2.79,Dairy
+Sour Cream,2.69,Dairy
+Cookies,3.49,Snacks
+Cake,12.99,Snacks
+Brownie,4.49,Snacks
+Pudding,2.49,Snacks
+Potato Chips,2.99,Snacks
+Chocolate,2.49,Snacks
+Candy,1.99,Snacks
+Pretzels,2.29,Snacks
+Granola Bars,3.49,Snacks
+Popcorn,2.79,Snacks
+Trail Mix,4.49,Snacks
+Water,1.49,Beverages
+Juice,2.99,Beverages
+Tea,2.49,Beverages
+Coffee,6.99,Beverages
+Soda,1.99,Beverages
+Wine,12.99,Beverages
+Beer,8.99,Beverages
+Whiskey,24.99,Beverages
+Vodka,14.99,Beverages
+Pineapple Juice,2.49,Beverages
+Apple Juice,2.99,Beverages
+Apple,0.79,Fruits
+Banana,0.59,Fruits
+Grape,2.99,Fruits
+Orange,0.69,Fruits
+Mango,1.49,Fruits
+Pineapple,2.99,Fruits
+Peach,1.29,Fruits
+Watermelon,4.99,Fruits
+Cherry,3.99,Fruits
+Strawberry,2.99,Fruits
+Blueberry,3.49,Fruits
+Kiwi,0.99,Fruits
+Frozen Peas,2.49,Frozen
+Frozen Vegetables,2.99,Frozen
+Frozen Pizza,5.99,Frozen
+Frozen Fish,7.99,Frozen
+Frozen Fries,3.49,Frozen
+Ice Cream,4.49,Frozen
+Frozen Berries,3.49,Frozen
+Pasta,1.99,Pantry
+Rice,2.49,Pantry
+Tomato Sauce,1.79,Pantry
+Ketchup,2.29,Pantry
+Mustard,1.49,Pantry
+Peanut Butter,3.99,Pantry
+Honey,4.49,Pantry
+Cereal,3.99,Pantry
+Oats,2.99,Pantry
+Flour,2.49,Pantry
+Sugar,2.29,Pantry
+Salt,1.49,Pantry
