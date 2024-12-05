@@ -5,6 +5,7 @@ import HomeScreen from '../(tabs)/index';
 import GroupOrderScreen from '../(tabs)/group-order';
 import ExploreScreen from '../(tabs)/explore'; 
 import ProfileScreen from '../(tabs)/profile'; 
+import MarketplaceScreen from '../(tabs)/marketplace';
 
 
 const Stack = createStackNavigator();
@@ -17,6 +18,7 @@ export default function AppNavigator() {
         <Stack.Screen name="group-order" component={GroupOrderScreen} />
         <Stack.Screen name="explore" component={ExploreScreen} />
         <Stack.Screen name="profile" component={ProfileScreen} />
+        <Stack.Screen name="marketplace" component={MarketplaceScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
