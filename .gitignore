@@ -1,0 +1,19 @@
+# Python
+backend/__pycache__/
+backend/.venv/
+*.pyc
+*.pyo
+*.pyd
+
+# React Native
+frontend/node_modules/
+frontend/.expo/
+frontend/dist/
+frontend/*.jks
+frontend/*.key
+frontend/*.mobileprovision
+
+# Miscellaneous
+.DS_Store
+*.log
+.env
