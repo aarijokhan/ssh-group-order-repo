@@ -1,95 +1,95 @@
 name,price,category
-Chicken,44.87,Meat
-Beef,47.73,Meat
-Lamb,23,Meat
-Turkey,41.11,Meat
-Pork,33.54,Meat
-Bacon,21.52,Meat
-Ham,12.31,Meat
-Salmon,49.91,Meat
-Tuna,26.2,Meat
-Shrimp,27.2,Meat
-Sausage,16.92,Meat
-Clams,46.31,Meat
-Octopus,29.34,Meat
-Squid,11.49,Meat
-Steak,32.99,Meat
-Tomato,19.1,Vegetables
-Lettuce,32.83,Vegetables
-Carrot,39.29,Vegetables
-Potato,11.83,Vegetables
-Onion,15.32,Vegetables
-Pepper,17.29,Vegetables
-Spinach,31.97,Vegetables
-Broccoli,24.26,Vegetables
-Cucumber,13.56,Vegetables
-Zucchini,5.55,Vegetables
-Garlic,15.33,Vegetables
-Ginger,42.93,Vegetables
-Cabbage,15.48,Vegetables
-Squash,20.62,Vegetables
-Mushroom,47.67,Vegetables
-Milk,11.52,Dairy
-Cheese,42.28,Dairy
-Yogurt,24.54,Dairy
-Butter,25.96,Dairy
-Cream,5.91,Dairy
-Eggs,35.63,Dairy
-Ice Cream,42.18,Dairy
-Cottage Cheese,7.68,Dairy
-Whipped Cream,46.17,Dairy
-Butter Milk,47.95,Dairy
-Sour Cream,40.76,Dairy
-Cookies,26.74,Snacks
-Cake,43.72,Snacks
-Brownie,31.59,Snacks
-Pudding,11.9,Snacks
-Potato Chips,14.97,Snacks
-Chocolate,18.36,Snacks
-Candy,27.56,Snacks
-Pretzels,19.39,Snacks
-Granola Bars,36.39,Snacks
-Popcorn,33.98,Snacks
-Trail Mix,47.21,Snacks
-Water,17.57,Beverages
-Juice,40.17,Beverages
-Tea,40.9,Beverages
-Coffee,37.79,Beverages
-Soda,29.43,Beverages
-Wine,23.11,Beverages
-Beer,25.39,Beverages
-Whiskey,34.99,Beverages
-Vodka,17.56,Beverages
-Pineapple Juice,9.72,Beverages
-Apple Juice,48.62,Beverages
-Apple,43.14,Fruits
-Banana,38.84,Fruits
-Grape,35.69,Fruits
-Orange,10.03,Fruits
-Mango,14.06,Fruits
-Pineapple,17.69,Fruits
-Peach,10.41,Fruits
-Watermelon,24.37,Fruits
-Cherry,46.57,Fruits
-Strawberry,27.23,Fruits
-Blueberry,49.99,Fruits
-Kiwi,8,Fruits
-Frozen Peas,15.02,Frozen
-Frozen Vegetables,5.61,Frozen
-Frozen Pizza,36.26,Frozen
-Frozen Fish,42.46,Frozen
-Frozen Fries,30.36,Frozen
-Ice Cream,47.62,Frozen
-Frozen Berries,27.26,Frozen
-Pasta,31.02,Pantry
-Rice,16.16,Pantry
-Tomato Sauce,16.94,Pantry
-Ketchup,7.32,Pantry
-Mustard,5.35,Pantry
-Peanut Butter,27.65,Pantry
-Honey,8.11,Pantry
-Cereal,27.9,Pantry
-Oats,41.01,Pantry
-Flour,15.32,Pantry
-Sugar,8.22,Pantry
-Salt,17.35,Pantry
+Chicken,8.99,Meat
+Beef,12.49,Meat
+Lamb,9.99,Meat
+Turkey,7.99,Meat
+Pork,6.99,Meat
+Bacon,5.49,Meat
+Ham,4.99,Meat
+Salmon,14.99,Meat
+Tuna,5.99,Meat
+Shrimp,12.99,Meat
+Sausage,4.49,Meat
+Clams,7.99,Meat
+Octopus,9.49,Meat
+Squid,6.49,Meat
+Steak,15.99,Meat
+Tomato,1.99,Vegetables
+Lettuce,2.49,Vegetables
+Carrot,1.49,Vegetables
+Potato,0.99,Vegetables
+Onion,0.79,Vegetables
+Pepper,1.29,Vegetables
+Spinach,2.99,Vegetables
+Broccoli,2.49,Vegetables
+Cucumber,1.19,Vegetables
+Zucchini,1.49,Vegetables
+Garlic,0.99,Vegetables
+Ginger,2.99,Vegetables
+Cabbage,1.29,Vegetables
+Squash,1.79,Vegetables
+Mushroom,2.49,Vegetables
+Milk,3.49,Dairy
+Cheese,4.99,Dairy
+Yogurt,2.99,Dairy
+Butter,3.79,Dairy
+Cream,2.49,Dairy
+Eggs,3.99,Dairy
+Ice Cream,4.49,Dairy
+Cottage Cheese,2.49,Dairy
+Whipped Cream,2.99,Dairy
+Butter Milk,2.79,Dairy
+Sour Cream,2.69,Dairy
+Cookies,3.49,Snacks
+Cake,12.99,Snacks
+Brownie,4.49,Snacks
+Pudding,2.49,Snacks
+Potato Chips,2.99,Snacks
+Chocolate,2.49,Snacks
+Candy,1.99,Snacks
+Pretzels,2.29,Snacks
+Granola Bars,3.49,Snacks
+Popcorn,2.79,Snacks
+Trail Mix,4.49,Snacks
+Water,1.49,Beverages
+Juice,2.99,Beverages
+Tea,2.49,Beverages
+Coffee,6.99,Beverages
+Soda,1.99,Beverages
+Wine,12.99,Beverages
+Beer,8.99,Beverages
+Whiskey,24.99,Beverages
+Vodka,14.99,Beverages
+Pineapple Juice,2.49,Beverages
+Apple Juice,2.99,Beverages
+Apple,0.79,Fruits
+Banana,0.59,Fruits
+Grape,2.99,Fruits
+Orange,0.69,Fruits
+Mango,1.49,Fruits
+Pineapple,2.99,Fruits
+Peach,1.29,Fruits
+Watermelon,4.99,Fruits
+Cherry,3.99,Fruits
+Strawberry,2.99,Fruits
+Blueberry,3.49,Fruits
+Kiwi,0.99,Fruits
+Frozen Peas,2.49,Frozen
+Frozen Vegetables,2.99,Frozen
+Frozen Pizza,5.99,Frozen
+Frozen Fish,7.99,Frozen
+Frozen Fries,3.49,Frozen
+Ice Cream,4.49,Frozen
+Frozen Berries,3.49,Frozen
+Pasta,1.99,Pantry
+Rice,2.49,Pantry
+Tomato Sauce,1.79,Pantry
+Ketchup,2.29,Pantry
+Mustard,1.49,Pantry
+Peanut Butter,3.99,Pantry
+Honey,4.49,Pantry
+Cereal,3.99,Pantry
+Oats,2.99,Pantry
+Flour,2.49,Pantry
+Sugar,2.29,Pantry
+Salt,1.49,Pantry
