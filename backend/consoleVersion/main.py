@@ -113,3 +113,130 @@ class GroupOrder:
 
         total_order_cost = sum(self.calcIndividualCost(student) for student in self.participants)
         print(f"\nTotal Order Cost: £{total_order_cost:.2f}")
+    
+class MarketplaceAPI:
+    def __init__(self, base_url='https://api.restful-api.dev/grocery'):
+        self.base_url = base_url
+
+    def fetchProducts(self):
+        """Fetch products from the marketplace API"""
+        products = [
+            Product('1', 'Milk', 1.99, 'Dairy'),
+            Product('2', 'Bread', 1.50, 'Bakery'),
+            Product('3', 'Bananas', 2.99, 'Fruits'),
+            Product('4', 'Eggs', 3.49, 'Dairy'),
+            Product('5', 'Cheese', 4.50, 'Dairy'),
+            Product('6', 'Apples', 2.50, 'Fruits'),
+            Product('7', 'Chicken', 5.99, 'Meat'),
+            Product('8', 'Chocolate', 3.99, 'Sweets'),
+            Product('9', 'Carrots', 1.29, 'Vegetables'),
+            Product('10', 'Potatoes', 0.99, 'Vegetables'),
+            Product('11', 'Orange Juice', 2.99, 'Beverages'),
+            Product('12', 'Yogurt', 1.75, 'Dairy'),
+            Product('13', 'Pasta', 1.89, 'Pantry'),
+            Product('14', 'Tomato Sauce', 2.49, 'Pantry'),
+            Product('15', 'Beef', 6.99, 'Meat'),
+            Product('16', 'Salmon', 8.99, 'Meat'),
+            Product('17', 'Cookies', 3.49, 'Sweets'),
+            Product('18', 'Watermelon', 4.99, 'Fruits'),
+            Product('19', 'Butter', 2.79, 'Dairy'),
+            Product('20', 'Cereal', 3.99, 'Pantry'),
+            Product('21', 'Lettuce', 1.49, 'Vegetables'),
+            Product('22', 'Coca-Cola', 1.99, 'Beverages'),
+            Product('23', 'Tea Bags', 2.89, 'Beverages'),
+            Product('24', 'Ice Cream', 4.99, 'Frozen'),
+            Product('25', 'Pizza', 6.49, 'Frozen'),
+            Product('26', 'Shrimp', 7.99, 'Meat'),
+            Product('27', 'Onions', 1.19, 'Vegetables'),
+            Product('28', 'Grapes', 3.29, 'Fruits'),
+            Product('29', 'Peanut Butter', 3.99, 'Pantry'),
+            Product('30', 'Honey', 4.49, 'Pantry')
+        ]
+        return products
+
+def display_categories(products):
+    """Display available product categories"""
+    # Extract unique categories
+    categories = sorted(set(product.category for product in products))
+
+    print("\n" + "=" * 40)
+    print("🛍️ PRODUCT CATEGORIES 🛍️".center(40))
+    print("=" * 40)
+
+    for i, category in enumerate(categories, 1):
+        print(f"{i}. {category}")
+
+    return categories
+
+def browse_and_select_products(student, available_products):
+    """Enhanced category-based product browsing and selection"""
+    while True:
+        # Display categories
+        categories = display_categories(available_products)
+        
+        # Add an exit option
+        print("\n0. 🔙 Back to Main Menu")
+
+        try:
+            # Get category selection
+            category_choice = int(input("\nEnter category number to browse (0 to go back): "))
+            
+            # Exit option
+            if category_choice == 0:
+                return
+
+            # Validate category selection
+            if 1 <= category_choice <= len(categories):
+                selected_category = categories[category_choice - 1]
+                category_products = [p for p in available_products if p.category == selected_category]
+
+                while True:
+                    # Display products in the selected category
+                    print(f"\n{selected_category.upper()} PRODUCTS:")
+                    for i, product in enumerate(category_products, 1):
+                        print(f"{i}. {product.name} - £{product.price:.2f}")
+                    
+                    # Add navigation options
+                    print("\n0. 🔙 Back to Categories")
+
+                    try:
+                        product_choice = input("Enter product number to add to cart (0 to go back): ")
+                        
+                        # Convert to integer
+                        product_choice = int(product_choice)
+
+                        # Go back to categories
+                        if product_choice == 0:
+                            break
+
+                        # Validate product selection
+                        if 1 <= product_choice <= len(category_products):
+                            selected_product = category_products[product_choice - 1]
+                            
+                            # Find the actual product in available_products
+                            actual_product = next(
+                                (p for p in available_products if p.id == selected_product.id), 
+                                None
+                            )
+                            
+                            if actual_product:
+                                if student.addToCart(actual_product):
+                                    print(f"{actual_product.name} added to cart.")
+                                
+                                # Ask if user wants to continue shopping or go back
+                                continue_shopping = input("Add another item? (y/n): ").lower()
+                                if continue_shopping != 'y':
+                                    break
+                            else:
+                                print("Product not found.")
+                        else:
+                            print("Invalid product number.")
+                    
+                    except ValueError:
+                        print("Please enter a valid number.")
+
+            else:
+                print("Invalid category number.")
+
+        except ValueError:
+            print("Please enter a valid number.")
