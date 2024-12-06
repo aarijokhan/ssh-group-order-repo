@@ -17,7 +17,7 @@ export default function MarketplaceScreen() {
   // Function to fetch products from the backend
   const fetchProducts = async () => {
     try {
-      const response = await axios.get('http://10.115.206.210:8000/products');
+      const response = await axios.get<Product[]>('http://10.115.206.210:8000/products');
       setProducts(response.data); 
     } catch (error) {
       console.error('Error fetching products:', error);
