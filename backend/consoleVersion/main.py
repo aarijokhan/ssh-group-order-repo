@@ -71,3 +71,45 @@ class Student:
         else:
             print(f"Insufficient funds. Total cost is £{total_cost:.2f}, but you only have £{self.wallet:.2f} in your wallet.")
             return False
+        
+class GroupOrder:
+    DELIVERY_FEE = 5.99
+
+    def __init__(self):
+        self.order_id = str(uuid.uuid4())
+        self.participants = []
+        self.start_time = datetime.now()
+
+    def addParticipant(self, student):
+        """Add a student to the group order within 4-hour window"""
+        time_elapsed = datetime.now() - self.start_time
+        if time_elapsed <= timedelta(hours=4):
+            self.participants.append(student)
+            student.group_order = self  # Link the student to this group order
+            print(f"Student {student.name} joined the order.")
+        else:
+            print("Cannot join order: 4-hour time limit exceeded.")
+
+    def calcIndividualCost(self, student):
+        """Calculate the individual cost including shared delivery fee"""
+        # Only charge delivery fee if there are participants
+        individual_delivery_cost = self.DELIVERY_FEE / len(self.participants) if self.participants else 0
+        return student.getCartTotal() + individual_delivery_cost
+
+    def displayOrderSummary(self):
+        """Display a comprehensive summary of the group order"""
+        print("\n=== Order Summary ===")
+        print(f"Order ID: {self.order_id}")
+        print(f"Number of participants: {len(self.participants)}")
+
+        for student in self.participants:
+            print(f"\nStudent: {student.name}")
+            print("Items in cart:")
+            for product in student.cart:
+                print(f"- {product.name}: £{product.price:.2f}")
+            
+            individual_total = self.calcIndividualCost(student)
+            print(f"Individual total (including delivery): £{individual_total:.2f}")
+
+        total_order_cost = sum(self.calcIndividualCost(student) for student in self.participants)
+        print(f"\nTotal Order Cost: £{total_order_cost:.2f}")
