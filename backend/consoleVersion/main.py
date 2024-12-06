@@ -240,3 +240,136 @@ def browse_and_select_products(student, available_products):
 
         except ValueError:
             print("Please enter a valid number.")
+
+def main():
+    # [Previous main function code remains the same until the menu section]
+    # Copy all the previous code before the menu display...
+    # Initialize marketplace
+    
+    marketplace = MarketplaceAPI()
+    available_products = marketplace.fetchProducts()
+
+    # Create a group order
+    group_order = GroupOrder()
+    student2 = Student('2', 'Aarij', 200)
+    student3 = Student('3', 'Hasaan', 30)
+    student4 = Student('4', 'Fizan', 10)
+
+    
+    joinOrd = input(f"Student ___ has created a group order: {group_order.order_id} , would you like to join? (press y to join, n to not join.) ")    
+    
+    if joinOrd == 'y' or joinOrd == 'Y':
+
+        print("You have joined the order!")
+
+      
+
+        # Add student to order
+        group_order.addParticipant(student2)
+        group_order.addParticipant(student3)
+        group_order.addParticipant(student4)
+
+   
+    
+
+        student2.cart = random.sample(available_products, min(3, len(available_products)))
+        student3.cart = random.sample(available_products, min(3, len(available_products)))
+        student4.cart = random.sample(available_products, min(3, len(available_products)))
+    
+
+        # Input for student
+        student_name = input("Enter student name: ")
+        student_id = str(uuid.uuid4())  # Generate a unique ID
+        student_wallet = 0
+        student = Student(student_id, student_name, student_wallet)
+
+        group_order.addParticipant(student)
+
+        while True:
+            # Enhanced menu display
+            print("\n" + "=" * 40)
+            print(f"🛒 STUDENT MARKETPLACE MENU 🛒".center(40))
+            print("=" * 40)
+            print("\nOptions:")
+            print("1. 📋 Browse Products by Category")  # Changed from "View Available Products"
+            print("2. 🧾 View Cart")
+            print("3. ❌ Remove Item from Cart")
+            print("4. 📊 View Order Summary")
+            print("5. 💳 Checkout")
+            print("6. 💰 View Wallet")
+            print("7. ➕ Top up Wallet")
+            print("8. 🚪 Exit")
+            print("=" * 40)
+
+            # Get user choice
+            try:
+                choice = int(input("\nEnter your choice (1-8): "))
+
+                match choice:
+                    case 1:
+                        # Browse and select products by category
+                        browse_and_select_products(student, available_products)
+
+                    case 2:
+                        # View cart
+                        student.viewCart()
+
+                    case 3:
+                        # Remove item from cart
+                        if student.viewCart():
+                            try:
+                                remove_choice = input("Enter the number of the item to remove: ")
+                                remove_index = int(remove_choice) - 1
+                        
+                                if 0 <= remove_index < len(student.cart):
+                                    removed_product = student.cart[remove_index]
+                                    student.removeFromCart(removed_product)
+                                    print(f"{removed_product.name} removed from cart.")
+                                else:
+                                    print("Invalid item number.")
+                    
+                            except ValueError:
+                                print("Please enter a valid number.")
+                    
+                    case 4:
+                        group_order.displayOrderSummary()
+
+                    case 5:
+                        # Checkout
+                        student.checkout()
+
+                    case 6:
+                        # View wallet
+                        print(f"Wallet Balance: £{student.wallet:.2f}")
+
+                    case 7:
+                        # Top up wallet
+                        try:
+                            topup = float(input("Enter the amount you would like to top up £: "))
+                            if topup > 0 and topup < 100000:
+                                student.wallet += topup
+                                print(f"Wallet Balance: £{student.wallet:.2f}")
+                            else:
+                                print("Invalid top-up amount. Please enter a positive value less than £100,000.")
+                        except ValueError:
+                            print("Please enter a valid number.")
+
+                    case 8:
+                        # Exit the program
+                        print("\n" + "=" * 40)
+                        print("Thank you for using the marketplace!".center(40))
+                        print("Goodbye! 👋".center(40))
+                        print("=" * 40)
+                        break
+
+            except Exception as e:
+                print(f"An error occurred: {e}")
+    
+    elif joinOrd == 'n' or joinOrd == 'N':
+        print("Goodbye!")
+
+
+    
+
+if __name__ == "__main__":
+    main()
