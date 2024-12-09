@@ -129,11 +129,12 @@ def fetch_products_from_database():
     try:
         # Establish database connection
         connection = psycopg2.connect(
-            host='localhost',
-            port=5432,
+            host='pg-2e6d194e-sepp-prototype.l.aivencloud.com',
+            port=25749,
             database='ssh',
-            user='test',
-            password='password'
+            user='avnadmin',
+            password='AVNS_HTFha2EWahHmllf6fuj',
+            sslmode='require'
         )
 
         with connection.cursor() as cursor:
@@ -354,4 +355,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main
+    main()
