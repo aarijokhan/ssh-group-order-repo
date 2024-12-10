@@ -19,7 +19,7 @@ databasePassword = os.getenv('DATABASE_PASSWORD')
 
 def retrieveDatabaseConnection():
     return psycopg2.connect(
-        host = databasePassword,
+        host = 'pg-2e6d194e-sepp-prototype.l.aivencloud.com',
         port=25749,
         database='ssh',
         user='avnadmin',
@@ -29,8 +29,8 @@ def retrieveDatabaseConnection():
 
 def fetchingProductsFromDatabase():
     try:
-        isConnecting = retrieveDatabaseConnection()
-        with isConnecting.cursor() as pointer:
+        connection = retrieveDatabaseConnection()
+        with connection.cursor() as pointer:
             pointer.execute("SELECT * FROM products")
             return [
                 Products(id = str(row[0]), name = row[1], price = float(row[2]), category = row[3]) for row in pointer.fetchall()
@@ -40,12 +40,12 @@ def fetchingProductsFromDatabase():
         return []
     finally:
         if 'connection' in locals():    
-            isConnecting.close()
+            connection.close()
 
 def fetchingGroupOrders(groupOrderId: str):
     try:
-        isConnecting = retrieveDatabaseConnection()
-        with isConnecting.cursor() as pointer:
+        connection = retrieveDatabaseConnection()
+        with connection.cursor() as pointer:
             pointer.execute("SELECT * FROM group_orders WHERE group_order_id = %s", (groupOrderId,))
             row = pointer.fetchone()
             if row: 
@@ -60,12 +60,12 @@ def fetchingGroupOrders(groupOrderId: str):
         return None
     finally:
         if 'connection' in locals():
-            isConnecting.close()
+            connection.close()
 
 def fetchingGroupOrderParticipants(groupOrderId: str):
     try:
-        isConnecting = retrieveDatabaseConnection()
-        with isConnecting.cursor() as pointer:
+        connection = retrieveDatabaseConnection()
+        with connection.cursor() as pointer:
             pointer.execute("SELECT * FROM group_order_participants WHERE group_order_id = %s", (groupOrderId,))
         return[
             {
@@ -81,7 +81,7 @@ def fetchingGroupOrderParticipants(groupOrderId: str):
         return []
     finally:
         if 'connection' in locals:
-            isConnecting.close()
+            connection.close()
 
 @app.get("/products")
 async def getProducts():
@@ -91,9 +91,9 @@ studentsBeingAdded ={}
 
 @app.post("/students")
 async def createAStudent(name:str, amountInWallet: float):
-    idOfStudent = str(uuid.uuid4())
-    studentsBeingAdded[idOfStudent] = Student(studentId = idOfStudent, nameOfStudent = name, amountInWallet = amountInWallet)
-    return studentsBeingAdded[idOfStudent]
+    id_student = str(uuid.uuid4())
+    studentsBeingAdded[id_student] = Student(studentId = id_student, name = name, wallet = amountInWallet)
+    return studentsBeingAdded[id_student]
 
 SAMPLE_STUDENTS = [
     {
@@ -136,14 +136,14 @@ SAMPLE_STUDENTS = [
     
 @app.post("/group_orders/")
 async def createTheGroupOrder():
-    idOfOrder = str(uuid.uuid4())
+    order_id = str(uuid.uuid4())
 
     try:
         connection = retrieveDatabaseConnection()
         with connection.cursor() as cursor:
             cursor.execute(
                 "INSERT INTO group_orders(id, start_time, delivery_fee) VALUES (%s, %s, %s)",
-                (idOfOrder, datetime.now(), 5.99)
+                (order_id, datetime.now(), 5.99)
             )
 
             indexOfStudent = 0
@@ -157,18 +157,18 @@ async def createTheGroupOrder():
                                 (group_order_id, student_id, student_name, cart_total, delivery_cost, total_cost)
                                 VALUES(%s, %s, %s, %s, %s, %s)
                                """,
-                               (idOfOrder, studentsToInsert['id'], studentsToInsert['name'], totalOfCart, 1.5)
+                               (order_id, studentsToInsert['id'], studentsToInsert['name'], totalOfCart, 1.5, totalOfCart + 1.5 )
                                )
                 studentsBeingAdded[studentsToInsert['id']] = Student(
                     id=studentsToInsert['id'],
                     name=studentsToInsert['name'],
                     wallet=studentsToInsert['wallet'],
                     cart=[Products(**product) for product in studentsToInsert['cart']],
-                    group_order_id=idOfOrder
+                    group_order_id=order_id
                 )
                 connection.commit()
             return{
-                "order_id": idOfOrder,
+                "order_id": order_id,
                 "start_time": datetime.now(),
                 "delivery_fee": 5.99,
                 "predefined_students": [
