@@ -2,6 +2,7 @@ from fastapi import FastAPI
 import psycopg2
 import os
 import uuid
+from datetime import datetime 
 
 app = FastAPI()
 
@@ -133,4 +134,20 @@ SAMPLE_STUDENTS = [
     }
 ]
     
+@app.post("/group_orders/")
+async def createTheGroupOrder():
+    idOfOrder = str(uuid.uuid4())
 
+    try:
+        connection = retrieveDatabaseConnection()
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "INSERT INTO group_orders(id, start_time, delivery_fee) VALUES (%s, %s, %s)",
+                (idOfOrder, datetime.now(), 5.99)
+            )
+
+            indexOfStudent = 0
+            while indexOfStudent < len (SAMPLE_STUDENTS):
+                studentsToInsert = SAMPLE_STUDENTS[indexOfStudent]
+                totalOfCart = sum(product['price'] for product in studentsToInsert['cart'])
+                indexOfStudent = indexOfStudent + 1
