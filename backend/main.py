@@ -1,10 +1,7 @@
 from fastapi import FastAPI
 import psycopg2
 import os
-<<<<<<< HEAD
-=======
 import uuid
->>>>>>> feature/apiPoints
 
 app = FastAPI()
 
@@ -88,8 +85,6 @@ def fetchingGroupOrderParticipants(groupOrderId: str):
 @app.get("/products")
 async def getProducts():
     return fetchingProductsFromDatabase()
-<<<<<<< HEAD
-=======
 
 studentsBeingAdded ={}
 
@@ -98,6 +93,5 @@ async def createAStudent(name:str, amountInWallet: float):
     idOfStudent = str(uuid.uuid4())
     studentsBeingAdded[idOfStudent] = Student(studentId = idOfStudent, nameOfStudent = name, amountInWallet = amountInWallet)
     return studentsBeingAdded[idOfStudent]
->>>>>>> feature/apiPoints
     
 
