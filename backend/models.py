@@ -14,6 +14,7 @@ class Student(BaseModel):
     nameOfStudent: str
     amountInWallet: float
     studentCart: List[Products] = field(default_factory=list)
+    groupOrderId: str = None
 
 class GroupOrders(BaseModel):
     groupOrderId: str
