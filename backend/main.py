@@ -183,3 +183,10 @@ async def createTheGroupOrder():
     except Exception as e:
         print(f"{e}")
 
+@app.get("/students/{student_id}")
+async def getStudents(id_student: str):
+    try:
+        chosen_student = studentsBeingAdded.get(id_student)
+        return chosen_student
+    except Exception as e:
+        print(f"{e}")
