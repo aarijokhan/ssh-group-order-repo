@@ -321,8 +321,4 @@ standard = ["colorama (>=0.4)", "httptools (>=0.6.3)", "python-dotenv (>=0.13)",
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.13"
-<<<<<<< HEAD
-content-hash = "af61b5edd879711ddd5960f91dec624a83feb6e979d53700e1fb1545347432b1"
-=======
 content-hash = "60a4fc1b87dbd374bfbb7495e7b98ca79513165e4ce54d210eaf7bc3ff976d4f"
->>>>>>> feature/apiPoints
