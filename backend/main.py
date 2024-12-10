@@ -91,6 +91,7 @@ studentsBeingAdded ={}
 @app.post("/students")
 async def createAStudent(name:str, amountInWallet: float):
     idOfStudent = str(uuid.uuid4())
-    studentsBeingAdded[idOfStudent] = Student(studentId = idOfStudent, nameOfStudent = name, )
+    studentsBeingAdded[idOfStudent] = Student(studentId = idOfStudent, nameOfStudent = name, amountInWallet = amountInWallet)
+    return studentsBeingAdded[idOfStudent]
     
 
