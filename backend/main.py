@@ -17,11 +17,11 @@ databasePassword = os.getenv('DATABASE_PASSWORD')
 
 def retrieveDatabaseConnection():
     return psycopg2.connect(
-        host ='pg-2e6d194e-sepp-prototype.l.aivencloud.com',
+        host = databasePassword,
         port=25749,
         database='ssh',
         user='avnadmin',
-        password='AVNS_6TcZ6F1yK_cHP93dRi7',
+        password= 'AVNS_6TcZ6F1yK_cHP93dRi7' ,
         sslmode='require' 
     )
 
