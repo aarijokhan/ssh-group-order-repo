@@ -16,10 +16,9 @@ const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   return (
     <SafeAreaView style={styles.safeArea}>
       <ScrollView contentContainerStyle={styles.container}>
-        {/* Header Section */}
         <View style={styles.header}>
           <Image
-            source={require('/Users/Fizan/Downloads/SshFrontEnd/SSH/assets/images/IMG_6604.jpg')}
+            source={require('/Users/Fizan/Downloads/SshFrontEnd/SSH/ssh-group-order-repo/assets/images/IMG_6604.jpg')}
             style={styles.logo}
           />
           <Text style={styles.headerText}>Welcome to SSH!</Text>
@@ -29,8 +28,6 @@ const navigation = useNavigation<NavigationProp<RootStackParamList>>();
           <Ionicons name="notifications-outline" size={28} color="#1d3d47"></Ionicons>
           </TouchableOpacity>
         </View>
-
-  {/* Group order Section */}
   <View style={styles.featureSection}>
   <Text style={styles.featureTitle}>Group Order</Text>
   <Text style={styles.featureDescription}>Simplify your grocery shopping with flatmates. Create or join a group, share carts, and split costs effortlessly.</Text>
@@ -39,18 +36,10 @@ const navigation = useNavigation<NavigationProp<RootStackParamList>>();
     onPress={() => navigation.navigate('group-order')}>
     <Text style={styles.actionButtonText}>Start a Group Order</Text>
   </TouchableOpacity>
-  
   </View>
-
-  {/* Explore section*/}
   <View style={styles.featureSection}>
           <Text style={styles.featureTitle}>Explore SSH Features</Text>
           <Text style={styles.featureDescription}>Discover SSH's smart solutions tailored for student life. Learn more about how we make living in student accommodations smarter and more efficient.</Text>
-          <TouchableOpacity
-            style={styles.actionButton}
-            onPress={() => navigation.navigate('explore')}>
-            <Text style={styles.actionButtonText}>Explore More</Text>
-          </TouchableOpacity>
         </View>
   </ScrollView> 
   </SafeAreaView> 
