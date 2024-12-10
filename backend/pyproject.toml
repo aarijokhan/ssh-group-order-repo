@@ -11,6 +11,10 @@ fastapi = "^0.115.6"
 uvicorn = "^0.32.1"
 pydantic = "^2.10.3"
 psycopg2 = "^2.9.10"
+<<<<<<< HEAD
+=======
+uuid = "^1.30"
+>>>>>>> feature/apiPoints
 
 
 [build-system]
