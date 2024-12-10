@@ -151,3 +151,35 @@ async def createTheGroupOrder():
                 studentsToInsert = SAMPLE_STUDENTS[indexOfStudent]
                 totalOfCart = sum(product['price'] for product in studentsToInsert['cart'])
                 indexOfStudent = indexOfStudent + 1
+
+                cursor.execute("""
+                                INSERT INTO group_order_participants
+                                (group_order_id, student_id, student_name, cart_total, delivery_cost, total_cost)
+                                VALUES(%s, %s, %s, %s, %s, %s)
+                               """,
+                               (idOfOrder, studentsToInsert['id'], studentsToInsert['name'], totalOfCart, 1.5)
+                               )
+                studentsBeingAdded[studentsToInsert['id']] = Student(
+                    id=studentsToInsert['id'],
+                    name=studentsToInsert['name'],
+                    wallet=studentsToInsert['wallet'],
+                    cart=[Products(**product) for product in studentsToInsert['cart']],
+                    group_order_id=idOfOrder
+                )
+                connection.commit()
+            return{
+                "order_id": idOfOrder,
+                "start_time": datetime.now(),
+                "delivery_fee": 5.99,
+                "predefined_students": [
+                    {
+                        "id": s['id'],
+                        "name": s['name'],
+                        "wallet": s['wallet'],
+                        "cart_total": sum(p['price'] for p in s['cart'])
+                    } for s in SAMPLE_STUDENTS
+                ]
+            }
+    except Exception as e:
+        print(f"{e}")
+
