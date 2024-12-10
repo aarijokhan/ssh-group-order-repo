@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert, TextInput } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 
 type Product = {
@@ -33,6 +34,12 @@ export default function CheckoutScreen() {
         generateGroupMembers(response.data);
       })
       .catch(() => Alert.alert('Error', 'Failed to load products.'));
+
+    const fetchCart = async () => {
+      const storedCart = await AsyncStorage.getItem('userCart');
+      setUserCart(storedCart ? JSON.parse(storedCart) : []);
+    };
+    fetchCart();
   }, []);
 
   const generateGroupMembers = (productList: Product[]) => {
@@ -44,11 +51,6 @@ export default function CheckoutScreen() {
       return { name, cart };
     });
     setGroupMembers(members);
-  };
-
-  const addToUserCart = (product: Product) => {
-    setUserCart((prevCart) => [...prevCart, product]);
-    Alert.alert('Added to Cart', `${product.name} has been added to your cart.`);
   };
 
   const calculateTotal = (cart: Product[]): number => {
@@ -78,11 +80,21 @@ export default function CheckoutScreen() {
     Alert.alert('Top-Up Successful', `Your wallet balance is now £${(walletBalance + amount).toFixed(2)}`);
   };
 
+  const handleCheckout = () => {
+    const total = parseFloat(calculateMemberTotal(userCart));
+    if (walletBalance >= total) {
+      setWalletBalance((prevBalance) => prevBalance - total);
+      Alert.alert('Checkout Successful', `£${total.toFixed(2)} has been deducted from your wallet.`);
+      setUserCart([]); 
+      AsyncStorage.removeItem('userCart'); 
+    } else {
+      Alert.alert('Insufficient Balance', `You need £${(total - walletBalance).toFixed(2)} more to complete the purchase.`);
+    }
+  };
   return (
     <View style={styles.safeArea}>
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <Text style={styles.headerText}>Group Checkout</Text>
-
         <View style={styles.walletContainer}>
           <Text style={styles.walletBalance}>Wallet Balance: £{walletBalance.toFixed(2)}</Text>
           <TextInput
@@ -90,19 +102,22 @@ export default function CheckoutScreen() {
             placeholder="Enter amount to top up"
             value={topUpAmount}
             keyboardType="numeric"
-            onChangeText={setTopUpAmount}
-          />
+            onChangeText={setTopUpAmount}/>
           <TouchableOpacity style={styles.topUpButton} onPress={handleTopUp}>
             <Text style={styles.topUpButtonText}>Top Up Wallet</Text>
           </TouchableOpacity>
         </View>
         <View style={styles.memberContainer}>
           <Text style={styles.memberName}>Your Cart</Text>
-          {userCart.map((product, index) => (
-            <Text key={index} style={styles.productText}>
-              {product.name} - £{product.price.toFixed(2)}
-            </Text>
-          ))}
+          {userCart.length > 0 ? (
+            userCart.map((product, index) => (
+              <Text key={index} style={styles.productText}>
+                {product.name} - £{product.price.toFixed(2)}
+              </Text>
+            ))
+          ) : (
+            <Text style={styles.emptyCartText}>Your cart is empty.</Text>
+          )}
           <Text style={styles.totalText}>Your Total: £{calculateMemberTotal(userCart)}</Text>
         </View>
         {groupMembers.map((member, index) => (
@@ -121,15 +136,11 @@ export default function CheckoutScreen() {
           <Text style={styles.summaryText}>Service Fee: £{SERVICE_FEE.toFixed(2)}</Text>
           <Text style={styles.summaryTotal}>Group Total: £{calculateGroupTotal()}</Text>
         </View>
-      <View style={styles.checkoutButtonContainer}>
-        <TouchableOpacity
-          style={styles.checkoutButton}
-          onPress={() =>
-            Alert.alert('Checkout Successful', `Total Cost: £${calculateGroupTotal()}`)
-          } >
-          <Text style={styles.checkoutButtonText}>Checkout</Text>
-        </TouchableOpacity>
-      </View>
+        <View style={styles.checkoutButtonContainer}>
+          <TouchableOpacity style={styles.checkoutButton} onPress={handleCheckout}>
+            <Text style={styles.checkoutButtonText}>Checkout</Text>
+          </TouchableOpacity>
+        </View>
       </ScrollView>
     </View>
   );
@@ -152,7 +163,7 @@ const styles = StyleSheet.create({
   },
   walletContainer: {
     padding: 16,
-    backgroundColor: 'white',
+    backgroundColor: 'lightgrey',
     borderRadius: 8,
     marginBottom: 16,
   },
@@ -193,6 +204,12 @@ const styles = StyleSheet.create({
   productText: {
     fontSize: 14,
     marginBottom: 4,
+  },
+  emptyCartText: {
+    fontSize: 16,
+    color: 'grey',
+    fontStyle: 'italic',
+    textAlign: 'center',
   },
   totalText: {
     fontSize: 16,

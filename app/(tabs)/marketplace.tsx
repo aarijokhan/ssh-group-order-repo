@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 
 type Product = {
@@ -20,18 +21,26 @@ export default function MarketplaceScreen() {
       .get<Product[]>('http://10.115.206.210:8000/products')
       .then((response) => setProducts(response.data))
       .catch(() => Alert.alert('Error', 'Failed to load products.'));
+
+    const fetchCart = async () => {
+      const storedCart = await AsyncStorage.getItem('userCart');
+      setCart(storedCart ? JSON.parse(storedCart) : []);
+    };
+    fetchCart();
   }, []);
 
   useEffect(() => {
     const total = cart.reduce((sum, item) => sum + item.price, 0);
     setCartTotal(total);
+
+    AsyncStorage.setItem('userCart', JSON.stringify(cart));
   }, [cart]);
 
   const addToCart = (product: Product) => {
     setCart((prevCart) => [...prevCart, product]);
     Alert.alert('Added to Cart', `${product.name} has been added to your cart.`);
   };
-  
+
   const getCategories = () => {
     return [...new Set(products.map((product) => product.category))];
   };
