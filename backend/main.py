@@ -52,7 +52,27 @@ def fetchingGroupOrders():
         if 'connection' in locals():
             isConnecting.close()
 
-def fetching
+def fetchingGroupOrderParticipants():
+    try:
+        isConnecting = retrieveDatabaseConnection()
+        with isConnecting.cursor() as pointer:
+            pointer.execute("SELECT * FROM group_order_participants WHERE group_order_id = %s", (groupOrderId,))
+        return[
+            {
+                "studentId": row[1],
+                "studentName": row[2],
+                "cart_total": row[3],
+                "delivery_cost": row[4]
+            }
+            for row in pointer.fetchall()
+        ]
+    except Exception as e:
+        print(f"{e}")
+        return []
+    finally:
+        if 'connection' in locals:
+            isConnecting.close()
+    
 
 
     
