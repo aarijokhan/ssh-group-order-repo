@@ -91,10 +91,11 @@ export default function CheckoutScreen() {
       Alert.alert('Insufficient Balance', `You need £${(total - walletBalance).toFixed(2)} more to complete the purchase.`);
     }
   };
+
   return (
     <View style={styles.safeArea}>
-      <ScrollView contentContainerStyle={styles.scrollContent}>
-        <Text style={styles.headerText}>Group Checkout</Text>
+      <ScrollView style={styles.scrollContent} contentContainerStyle={{ paddingBottom: 100 }}>
+      <Text style={styles.headerText}>Group Checkout</Text>
         <View style={styles.walletContainer}>
           <Text style={styles.walletBalance}>Wallet Balance: £{walletBalance.toFixed(2)}</Text>
           <TextInput
@@ -163,7 +164,7 @@ const styles = StyleSheet.create({
   },
   walletContainer: {
     padding: 16,
-    backgroundColor: 'lightgrey',
+    backgroundColor: 'white',
     borderRadius: 8,
     marginBottom: 16,
   },

@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
   content: {
     padding: 16,
     marginBottom: 16,
-    backgroundColor: 'lightgray',
+    backgroundColor: 'white',
     borderRadius: 8,
   },
   sectionTitle: {
