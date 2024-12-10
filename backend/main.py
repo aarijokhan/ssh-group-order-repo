@@ -93,5 +93,44 @@ async def createAStudent(name:str, amountInWallet: float):
     idOfStudent = str(uuid.uuid4())
     studentsBeingAdded[idOfStudent] = Student(studentId = idOfStudent, nameOfStudent = name, amountInWallet = amountInWallet)
     return studentsBeingAdded[idOfStudent]
+
+SAMPLE_STUDENTS = [
+    {
+        'id': str(uuid.uuid4()),
+        'name': 'Aarij',
+        'wallet': 100.00,
+        'cart': [
+            {'id': '1', 'name': 'Chicken', 'price': 8.99, 'category': 'Meat'},
+            {'id': '5', 'name': 'Tomato', 'price': 1.99, 'category': 'Vegetables'},
+            {'id': '6', 'name': 'Milk', 'price': 3.49, 'category': 'Dairy'},
+            {'id': '7', 'name': 'Cookies', 'price': 3.49, 'category': 'Snacks'},
+            {'id': '8', 'name': 'Water', 'price': 1.49, 'category': 'Beverages'}
+        ]
+    },
+    {
+        'id': str(uuid.uuid4()),
+        'name': 'Saad',
+        'wallet': 75.50,
+        'cart': [
+            {'id': '2', 'name': 'Beef', 'price': 12.49, 'category': 'Meat'},
+            {'id': '9', 'name': 'Cheese', 'price': 4.99, 'category': 'Dairy'},
+            {'id': '10', 'name': 'Potato Chips', 'price': 2.99, 'category': 'Snacks'},
+            {'id': '11', 'name': 'Tea', 'price': 2.49, 'category': 'Beverages'},
+            {'id': '12', 'name': 'Peach', 'price': 1.29, 'category': 'Fruits'}
+        ]
+    },
+    {
+        'id': str(uuid.uuid4()),
+        'name': 'Hasaan',
+        'wallet': 50.25,
+        'cart': [
+            {'id': '3', 'name': 'Lamb', 'price': 9.99, 'category': 'Meat'},
+            {'id': '13', 'name': 'Yogurt', 'price': 2.99, 'category': 'Dairy'},
+            {'id': '14', 'name': 'Brownie', 'price': 4.49, 'category': 'Snacks'},
+            {'id': '15', 'name': 'Pineapple Juice', 'price': 2.49, 'category': 'Beverages'},
+            {'id': '16', 'name': 'Banana', 'price': 0.59, 'category': 'Fruits'}
+        ]
+    }
+]
     
 
