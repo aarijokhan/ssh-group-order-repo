@@ -3,6 +3,11 @@ import psycopg2
 
 app = FastAPI()
 
+# Default Root 
+@app.get("/")
+def root():
+    return {"Hello":"There"}
+
 from models import (
     Products, Student, GroupOrders
 )
@@ -32,7 +37,7 @@ def fetchingProductsFromDatabse():
         if 'connection' in locals():    
             isConnecting.close()
 
-def fetchingGroupOrders():
+def fetchingGroupOrders(groupOrderId: str):
     try:
         isConnecting = retrieveDatabaseConnection()
         with isConnecting.cursor() as pointer:
@@ -40,9 +45,9 @@ def fetchingGroupOrders():
             row = pointer.fetchone()
             if row: 
                 return GroupOrders(
-                    groupOrderId = str(row[0])
-                    timeOfOrder = row[1]
-                    deliveryFee = 5.99
+                    order_id = str(row[0]),
+                    start_time = row[1],
+                    delivery_fee = 5.99
                 )
             return None
     except Exception as e:
@@ -52,7 +57,7 @@ def fetchingGroupOrders():
         if 'connection' in locals():
             isConnecting.close()
 
-def fetchingGroupOrderParticipants():
+def fetchingGroupOrderParticipants(groupOrderId: str):
     try:
         isConnecting = retrieveDatabaseConnection()
         with isConnecting.cursor() as pointer:
@@ -74,12 +79,4 @@ def fetchingGroupOrderParticipants():
             isConnecting.close()
     
 
-    
 
-          
-        
-
-
-@app.get("/")
-def root():
-    return {"Hello":"There"}
