@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert, TextInput } from 'react-native';
 import axios from 'axios';
 
 type Product = {
@@ -22,6 +22,8 @@ export default function CheckoutScreen() {
   const [products, setProducts] = useState<Product[]>([]);
   const [groupMembers, setGroupMembers] = useState<GroupMember[]>([]);
   const [userCart, setUserCart] = useState<Product[]>([]);
+  const [walletBalance, setWalletBalance] = useState<number>(0);
+  const [topUpAmount, setTopUpAmount] = useState<string>('');
 
   useEffect(() => {
     axios
@@ -65,10 +67,35 @@ export default function CheckoutScreen() {
     return (groupTotal + userTotal + DELIVERY_FEE + SERVICE_FEE).toFixed(2);
   };
 
+  const handleTopUp = () => {
+    const amount = parseFloat(topUpAmount);
+    if (isNaN(amount) || amount <= 0) {
+      Alert.alert('Invalid Amount', 'Please enter a valid amount to top up.');
+      return;
+    }
+    setWalletBalance((prevBalance) => prevBalance + amount);
+    setTopUpAmount('');
+    Alert.alert('Top-Up Successful', `Your wallet balance is now £${(walletBalance + amount).toFixed(2)}`);
+  };
+
   return (
     <View style={styles.safeArea}>
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <Text style={styles.headerText}>Group Checkout</Text>
+
+        <View style={styles.walletContainer}>
+          <Text style={styles.walletBalance}>Wallet Balance: £{walletBalance.toFixed(2)}</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Enter amount to top up"
+            value={topUpAmount}
+            keyboardType="numeric"
+            onChangeText={setTopUpAmount}
+          />
+          <TouchableOpacity style={styles.topUpButton} onPress={handleTopUp}>
+            <Text style={styles.topUpButtonText}>Top Up Wallet</Text>
+          </TouchableOpacity>
+        </View>
         <View style={styles.memberContainer}>
           <Text style={styles.memberName}>Your Cart</Text>
           {userCart.map((product, index) => (
@@ -99,11 +126,11 @@ export default function CheckoutScreen() {
           style={styles.checkoutButton}
           onPress={() =>
             Alert.alert('Checkout Successful', `Total Cost: £${calculateGroupTotal()}`)
-          }>
+          } >
           <Text style={styles.checkoutButtonText}>Checkout</Text>
         </TouchableOpacity>
       </View>
-      </ScrollView >
+      </ScrollView>
     </View>
   );
 }
@@ -111,7 +138,7 @@ export default function CheckoutScreen() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#f9f9f9',
+    backgroundColor: 'white',
   },
   scrollContent: {
     padding: 16,
@@ -123,11 +150,40 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 16,
   },
+  walletContainer: {
+    padding: 16,
+    backgroundColor: 'white',
+    borderRadius: 8,
+    marginBottom: 16,
+  },
+  walletBalance: {
+    fontSize: 18,
+    marginBottom: 8,
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: 'grey',
+    padding: 8,
+    borderRadius: 4,
+    marginBottom: 8,
+  },
+  topUpButton: {
+    backgroundColor: 'green',
+    padding: 10,
+    borderRadius: 4,
+    alignItems: 'center',
+  },
+  topUpButtonText: {
+    color: 'white',
+    fontSize: 16,
+  },
   memberContainer: {
-    backgroundColor: '#ffffff',
+    backgroundColor: 'white',
     padding: 16,
     borderRadius: 8,
     marginBottom: 16,
+    borderWidth: 1,
+    borderColor: 'lightgrey',
   },
   memberName: {
     fontSize: 18,
@@ -145,7 +201,7 @@ const styles = StyleSheet.create({
   },
   summaryContainer: {
     padding: 16,
-    backgroundColor: '#e0e0e0',
+    backgroundColor: 'lightgrey',
     borderRadius: 8,
     marginBottom: 16,
   },
@@ -160,18 +216,18 @@ const styles = StyleSheet.create({
   },
   checkoutButtonContainer: {
     padding: 16,
-    backgroundColor: '#f9f9f9',
+    backgroundColor: 'white',
     borderTopWidth: 1,
-    borderColor: '#ccc',
+    borderColor: 'lightgrey',
   },
   checkoutButton: {
-    backgroundColor: '#1d3d47',
+    backgroundColor: 'blue',
     padding: 16,
     borderRadius: 8,
     alignItems: 'center',
   },
   checkoutButtonText: {
-    color: '#ffffff',
+    color: 'white',
     fontSize: 16,
     fontWeight: 'bold',
   },
