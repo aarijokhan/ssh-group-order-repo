@@ -29,7 +29,7 @@ def fetchingProductsFromDatabse():
         print(f"{e}")
         return []
     finally:
-        if 'connection' in locals():
+        if 'connection' in locals():    
             isConnecting.close()
 
 def fetchingGroupOrders():
@@ -73,7 +73,6 @@ def fetchingGroupOrderParticipants():
         if 'connection' in locals:
             isConnecting.close()
     
-
 
     
 
