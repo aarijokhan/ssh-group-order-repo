@@ -4,19 +4,19 @@ from typing import List
 from dataclasses import dataclass, field
 
 class Products(BaseModel):
-    productId: str
-    nameOfProduct: str
-    priceOfProduct: float
-    foodType: str
+    id: str
+    name: str
+    price: float
+    category: str
 
 class Student(BaseModel):
-    studentId: str
-    nameOfStudent: str
-    amountInWallet: float
-    studentCart: List[Products] = field(default_factory=list)
-    groupOrderId: str = None
+    id: str
+    name: str
+    wallet: float
+    cart: List[Products] = field(default_factory=list)
+    group_order_id: str = None
 
 class GroupOrders(BaseModel):
-    groupOrderId: str
-    timeOfOrder: datetime = datetime.now()
-    deliveryFee = float
+    order_id: str
+    start_time: datetime = datetime.now()
+    delivery_fee : float
