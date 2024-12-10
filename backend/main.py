@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 import psycopg2
+import os
 
 app = FastAPI()
 
@@ -12,17 +13,19 @@ from models import (
     Products, Student, GroupOrders
 )
 # Code to connect to the database from Generative AI
+databasePassword = os.getenv('DATABASE_PASSWORD')
+
 def retrieveDatabaseConnection():
     return psycopg2.connect(
         host ='pg-2e6d194e-sepp-prototype.l.aivencloud.com',
         port=25749,
         database='ssh',
         user='avnadmin',
-        password='AVNS_HTFha2EWahHmllf6fuj',
+        password='AVNS_6TcZ6F1yK_cHP93dRi7',
         sslmode='require' 
     )
 
-def fetchingProductsFromDatabse():
+def fetchingProductsFromDatabase():
     try:
         isConnecting = retrieveDatabaseConnection()
         with isConnecting.cursor() as pointer:
@@ -77,6 +80,9 @@ def fetchingGroupOrderParticipants(groupOrderId: str):
     finally:
         if 'connection' in locals:
             isConnecting.close()
-    
 
+@app.get("/products")
+async def getProducts():
+    return fetchingProductsFromDatabase()
+    
 
