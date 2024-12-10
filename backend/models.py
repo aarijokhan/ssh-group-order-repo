@@ -17,5 +17,5 @@ class Student(BaseModel):
 
 class GroupOrders(BaseModel):
     groupOrderId: str
-    participantsOfOrder: List[str] = field(default_factory=list)
     timeOfOrder: datetime = datetime.now()
+    deliveryFee = float
