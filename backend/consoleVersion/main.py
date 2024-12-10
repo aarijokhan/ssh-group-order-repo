@@ -12,6 +12,7 @@ class Product:
         self.price = price
         self.category = category
 
+
 class Student:
     def __init__(self, id, name, wallet):
         self.id = id
@@ -21,25 +22,23 @@ class Student:
         self.group_order = None
 
     def canAffordProduct(self, product):
-        """Check if student has enough money to buy a product"""
         return self.wallet >= product.price
 
     def addToCart(self, product):
-        """Add a product to the student's cart if affordable"""
         if self.canAffordProduct(product):
             self.cart.append(product)
             return True
         else:
             print(
-                f"Insufficient funds. {product.name} costs £{product.price:.2f}, but you only have £{self.wallet:.2f} in your wallet.")
+                f"Insufficient funds. {product.name} costs £{product.price:.2f}, "
+                f"but you only have £{self.wallet:.2f} in your wallet."
+            )
             return False
 
     def removeFromCart(self, product):
-        """Remove a product from the student's cart"""
         self.cart.remove(product)
 
     def viewCart(self):
-        """View items in the cart with their index"""
         if not self.cart:
             print("Your cart is empty.")
             return False
@@ -50,13 +49,10 @@ class Student:
         return True
 
     def getCartTotal(self):
-        """Calculate the total cost of items in the cart"""
         return sum(product.price for product in self.cart)
 
     def checkout(self):
-        """Process checkout, deducting cart total plus individual delivery fee from wallet"""
         cart_total = self.getCartTotal()
-
 
         if not self.group_order:
             print("Error: Not part of a group order.")
@@ -68,12 +64,19 @@ class Student:
         if self.wallet >= total_cost:
             self.wallet -= total_cost
             print(
-                f"Checkout successful. Charged £{cart_total:.2f} + £{individual_delivery_cost:.2f} delivery. Remaining wallet balance: £{self.wallet:.2f}")
+                f"Checkout successful. Charged £{cart_total:.2f} + £{individual_delivery_cost:.2f} delivery. "
+                f"Remaining wallet balance: £{self.wallet:.2f}"
+            )
             self.cart.clear()
+
+            # Save the group order to the database
+            self.group_order.save_to_database()
             return True
         else:
             print(
-                f"Insufficient funds. Total cost is £{total_cost:.2f}, but you only have £{self.wallet:.2f} in your wallet.")
+                f"Insufficient funds. Total cost is £{total_cost:.2f}, "
+                f"but you only have £{self.wallet:.2f} in your wallet."
+            )
             return False
 
 
@@ -86,22 +89,15 @@ class GroupOrder:
         self.start_time = datetime.now()
 
     def addParticipant(self, student):
-        """Add a student to the group order within 4-hour window"""
-        time_elapsed = datetime.now() - self.start_time
-        if time_elapsed <= timedelta(hours=4):
             self.participants.append(student)
             student.group_order = self
             print(f"Student {student.name} joined the order.")
-        else:
-            print("Cannot join order: 4-hour time limit exceeded.")
 
     def calcIndividualCost(self, student):
-        """Calculate the individual cost including shared delivery fee"""
         individual_delivery_cost = self.DELIVERY_FEE / len(self.participants) if self.participants else 0
         return student.getCartTotal() + individual_delivery_cost
 
     def displayOrderSummary(self):
-        """Display a comprehensive summary of the group order"""
         print("\n=== Order Summary ===")
         print(f"Order ID: {self.order_id}")
         print(f"Number of participants: {len(self.participants)}")
@@ -118,16 +114,57 @@ class GroupOrder:
         total_order_cost = sum(self.calcIndividualCost(student) for student in self.participants)
         print(f"\nTotal Order Cost: £{total_order_cost:.2f}")
 
+    def save_to_database(self):
+        try:
+            connection = psycopg2.connect(
+                host='pg-2e6d194e-sepp-prototype.l.aivencloud.com',
+                port=25749,
+                database='ssh',
+                user='avnadmin',
+                password='AVNS_HTFha2EWahHmllf6fuj',
+                sslmode='require'
+            )
+
+            with connection:
+                with connection.cursor() as cursor:
+                    # Insert group order details
+                    cursor.execute(
+                        """
+                        INSERT INTO group_orders (id, start_time, delivery_fee)
+                        VALUES (%s, %s, %s)
+                        """,
+                        (self.order_id, self.start_time, self.DELIVERY_FEE)
+                    )
+
+                    # Insert participants
+                    for student in self.participants:
+                        cart_total = student.getCartTotal()  # Ensure this is recalculated
+                        delivery_cost = self.DELIVERY_FEE / len(self.participants)
+                        total_cost = cart_total + delivery_cost
+
+                        cursor.execute(
+                            """
+                            INSERT INTO group_order_participants (
+                                group_order_id, student_id, student_name,
+                                cart_total, delivery_cost, total_cost
+                            )
+                            VALUES (%s, %s, %s, %s, %s, %s)
+                            """,
+                            (self.order_id, student.id, student.name,
+                             cart_total, delivery_cost, total_cost)
+                        )
+
+
+        except (Exception, psycopg2.Error) as error:
+            print(f"Error saving group order to the database: {error}")
+
+        finally:
+            if 'connection' in locals():
+                connection.close()
+
 
 def fetch_products_from_database():
-    """
-    Fetch products directly from the PostgreSQL database using SELECT *
-
-    Returns:
-        list: List of Product objects
-    """
     try:
-        # Establish database connection
         connection = psycopg2.connect(
             host='pg-2e6d194e-sepp-prototype.l.aivencloud.com',
             port=25749,
@@ -138,9 +175,7 @@ def fetch_products_from_database():
         )
 
         with connection.cursor() as cursor:
-            # Fetch ALL products from the products table
             cursor.execute("SELECT * FROM products")
-
             products = [
                 Product(
                     str(row[0]),
@@ -158,6 +193,9 @@ def fetch_products_from_database():
     finally:
         if 'connection' in locals():
             connection.close()
+
+
+
 
 
 def display_categories(products):
@@ -248,14 +286,17 @@ def main():
 
     group_order = GroupOrder()
 
-    student2 = Student('2', 'Aarij', 200)
-    student3 = Student('3', 'Hasaan', 30)
-    student4 = Student('4', 'Fizan', 10)
+    available_products = fetch_products_from_database()
+    group_order = GroupOrder()
+
+    # Use valid UUIDs for student IDs
+    student2 = Student(str(uuid.uuid4()), 'Aarij', 200)
+    student3 = Student(str(uuid.uuid4()), 'Hasaan', 30)
+    student4 = Student(str(uuid.uuid4()), 'Fizan', 10)
 
     joinOrd = input(f"Student ___ has started a group order: {group_order.order_id}, would you like to join? (y/n): ")
 
-    if joinOrd == 'y' or joinOrd == 'Y':
-
+    if joinOrd.lower() == 'y':
         group_order.addParticipant(student2)
         group_order.addParticipant(student3)
         group_order.addParticipant(student4)
@@ -264,11 +305,9 @@ def main():
         student3.cart = random.sample(available_products, min(3, len(available_products)))
         student4.cart = random.sample(available_products, min(3, len(available_products)))
 
-
-        student_name = input("Enter student name: ")
-        student_id = str(uuid.uuid4())
+        student_name = input("Enter your name: ")
         student_wallet = 0
-        student = Student(student_id, student_name, student_wallet)
+        student = Student(str(uuid.uuid4()), student_name, student_wallet)
 
         group_order.addParticipant(student)
 
