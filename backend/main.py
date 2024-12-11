@@ -101,16 +101,11 @@ async def getProducts():
 studentsBeingAdded = {}
 
 
-# @app.post("/students")
-# async def createAStudent(name: str, amountInWallet: float):
-#     id_student = str(uuid.uuid4())
-#     studentsBeingAdded[id_student] = Student(studentId=id_student, name=name, wallet=amountInWallet)
-#     return studentsBeingAdded[id_student]
 @app.post("/students")
 async def createAStudent(name: str, amountInWallet: float):
     id_student = str(uuid.uuid4())
     studentsBeingAdded[id_student] = Student(
-        id=id_student,  # Note the 'id', not 'studentId'
+        id=id_student,  
         name=name,
         wallet=amountInWallet
     )
@@ -242,7 +237,7 @@ async def joinTheGroupOrder(order_id: str, id_student: str):
     if not group_order:
         raise HTTPException(status_code=404, detail="No group order with this id found!")
 
-    student_joining_group = doesStudentExist(id_student)
+    student_joining_group = studentsBeingAdded.get(id_student)
 
     isStudentAlreadyInGroup(order_id, id_student)
 
