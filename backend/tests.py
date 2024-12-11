@@ -40,3 +40,14 @@ def testCreatingAGroupOrder(client):
     assert 'order_id' in group_order
     assert group_order['delivery_fee'] == 5.99
 
+def testJoiningAGroupOrder(client, creatingAGroupOrder, creatingAStudent):
+    group_order = creatingAGroupOrder
+    student_created = creatingAStudent
+
+    feedback = client.post(f"/group_orders/{group_order['order_id']}/join/",
+                           params={"student_id": student_created['id']})
+    
+    assert feedback.status_code == 200
+    assert feedback.json(['message']) == "Group order has been joined successfully"
+
+
