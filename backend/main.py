@@ -1,3 +1,4 @@
+from http.client import HTTPException
 from fastapi import FastAPI
 import psycopg2
 import os
@@ -190,3 +191,24 @@ async def getStudents(id_student: str):
         return chosen_student
     except Exception as e:
         print(f"{e}")
+
+
+def isStudentAlreadyInGroup(order_id: str, id_student: str) -> None:
+    participants_of_group = fetchingGroupOrderParticipants(order_id)
+
+    for participant in participants_of_group:
+        if participant['student_id'] == id_student:
+            raise HTTPException(status_code = 400, detail = "Student is already in the group!")
+
+def doesStudentExist(id_student: str) -> dict:
+    try:
+        student = studentsBeingAdded.get(id_student)
+        return student
+    except Exception as e:
+        print("{e}")
+        raise HTTPException(status_code=400, detail = "Student has not been found!")
+
+@app.post("/group_orders/{order_id}/join/")
+async def joinTheGroupOrder(order_id: str, id_student: str):
+
+    pass
