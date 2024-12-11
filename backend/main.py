@@ -249,19 +249,9 @@ async def joinTheGroupOrder(order_id: str, id_student: str):
         with connection.cursor() as pointer:
             pointer.execute(
                 """
-                INSERT INTO group_order_participants (
-                    group_order_id, student_id, student_name,
-                    cart_total, delivery_cost, total_cost
-                ) VALUES (%s, %s, %s, %s, %s, %s)
+                INSERT INTO group_order_participants (group_order_id, student_id, student_name, cart_total, delivery_cost, total_cost) VALUES (%s, %s, %s, %s, %s, %s)
                 """,
-                (
-                    order_id,
-                    id_student,
-                    student_joining_group.name,
-                    0,
-                    0,
-                    0
-                )
+                (order_id, id_student, student_joining_group.name, 0, 0, 0)
             )
             student_joining_group.group_order_id = order_id
 
@@ -315,3 +305,36 @@ async def addingToTheCart(id_student: str, product_id: str):
     except Exception as e:
         raise HTTPException(status_code=500, detail="Error adding to cart")
 
+@app.post("/students/{student_id}/checkout/")
+async def checkingOutOfOrder (id_student:str):
+    student_registered = studentsBeingAdded.get(id_student)
+
+    if not student_registered or not student_registered.group_order_id:
+        raise HTTPException(status_code=400, detail="Student not part of a group order")
+    
+    group_order = fetchingGroupOrders(student_registered.group_order_id)
+    participants = fetchingGroupOrderParticipants(student_registered.group_order_id)
+
+    cart_total_for_student = 0
+    for product in student_registered.cart:
+        cart_total_for_student += product.price
+    
+    delivery_cost = group_order.delivery_fee / len(participants)
+    total_cost_for_student = cart_total_for_student + delivery_cost
+
+    if student_registered.wallet < total_cost_for_student:
+        raise HTTPException(status_code=400, detail="Not enough funds!")
+
+    student_registered.wallet -= total_cost_for_student
+    student_registered.cart.clear()
+
+    try:
+        connection = retrieveDatabaseConnection()
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "UPDATE group_order_participants SET cart_total = 0 WHERE student_id = %s AND group_order_id = %s", (id_student, student_registered.group_order_id)
+            )
+            connection.commit()
+        return {"wallet": student_registered.wallet, "message": "Checkout successful"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail="Error during checkout")
