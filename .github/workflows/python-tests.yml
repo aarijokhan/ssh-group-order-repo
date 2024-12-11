@@ -27,6 +27,7 @@ jobs:
         pip install uuid
         pip install datetime
         pip install http.client
+        pip install psycopg2
     
     - name: Run Tests
       run: |
