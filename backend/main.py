@@ -208,7 +208,52 @@ def doesStudentExist(id_student: str) -> dict:
         print("{e}")
         raise HTTPException(status_code=400, detail = "Student has not been found!")
 
+
 @app.post("/group_orders/{order_id}/join/")
 async def joinTheGroupOrder(order_id: str, id_student: str):
+    
+    group_order = fetchingGroupOrders(order_id)
 
-    pass
+    if not group_order:
+        raise HTTPException(status_code = 404, detail = "No group order with this id found!")
+    
+    student_joining_group = doesStudentExist(id_student)
+
+    isStudentAlreadyInGroup(order_id, id_student)
+
+    try:
+        connection = retrieveDatabaseConnection()
+        with connection.cursor() as pointer:
+            pointer.execute(
+                """
+                INSERT INTO group_order_participants (
+                    group_order_id, student_id, student_name,
+                    cart_total, delivery_cost, total_cost
+                ) VALUES (%s, %s, %s, %s, %s, %s)
+                """,
+                (
+                    order_id,
+                    id_student,
+                    student_joining_group.name,
+                    0, 
+                    0,  
+                    0  
+                )
+            )
+            student_joining_group.group_order_id = order_id
+
+            connection.commit()
+
+            return{
+                "order_id" : order_id,
+                "student_id" : id_student,
+                "message" : "Group order has been joined successfully" 
+            }
+    except Exception as e:
+        print(f"{e}")
+    
+    finally:
+        if connection:
+            connection.close()
+
+ 
