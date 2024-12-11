@@ -279,4 +279,39 @@ async def joinTheGroupOrder(order_id: str, id_student: str):
         if connection:
             connection.close()
 
+@app.post("/students/{student_id}/cart/")
+async def addingToTheCart(id_student: str, product_id: str):
+    student_registered = studentsBeingAdded.get(id_student)
+
+    if not student_registered:
+        raise HTTPException(status_code=404, detail="Student not found")
+    
+    products = fetchingProductsFromDatabase()
+    product_corpus = None
+    for product in products:
+        if product.id == product_id:
+            product_corpus = product
+            break
+    
+    if not product_corpus:
+        raise HTTPException(status_code=404, detail="Product not found")
+    
+    initial_cart_total = 0
+    for product in student_registered.cart:
+        initial_cart_total += product.price
+    student_registered.cart.append(product_corpus)
+
+    cart_total = initial_cart_total
+
+    try:
+        connection = retrieveDatabaseConnection()
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "UPDATE group_order_participants SET cart_total = %s WHERE student_id = %s AND group_order_id = %s",
+                (cart_total + product_corpus.price, id_student, student_registered.group_order_id)
+            )
+            connection.commit()
+        return student_registered.cart
+    except Exception as e:
+        raise HTTPException(status_code=500, detail="Error adding to cart")
 
