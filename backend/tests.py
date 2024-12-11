@@ -11,12 +11,12 @@ def client():
 
 @pytest.fixture
 def creatingAStudent(client):
-    feedback = client.post("/students/", params = {"name": "T1", "wallet" : 100.00})
+    feedback = client.post("/students/", params = {"name": "T1", "amountInWallet" : 100.00})
     assert feedback.status_code == 200
     return feedback.json()
 
 def testCreatingAStudent(client):
-    feedback = client.post("/students/", params = {"name": "Barry Allen", "wallet" : 100.00})
+    feedback = client.post("/students/", params = {"name": "Barry Allen", "amountInWallet" : 100.00})
     student_created = feedback.json()
 
     assert feedback.status_code == 200
@@ -48,6 +48,6 @@ def testJoiningAGroupOrder(client, creatingAGroupOrder, creatingAStudent):
                            params={"student_id": student_created['id']})
     
     assert feedback.status_code == 200
-    assert feedback.json(['message']) == "Group order has been joined successfully"
+    assert feedback.json()(['message']) == "Group order has been joined successfully"
 
 
