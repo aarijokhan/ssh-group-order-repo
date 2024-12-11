@@ -56,3 +56,19 @@ def testJoiningAGroupOrder(client, creatingAGroupOrder, creatingAStudent):
     assert feedback.status_code == 200
     assert feedback.json()['message'] == "Group order has been joined successfully"
 
+def testAddingToTheCart(client, creatingAStudent):
+    products_response = client.get("/products/")
+    assert products_response.status_code == 200
+    inventory_of_the_products = products_response.json()
+
+    if len(inventory_of_the_products) > 0 and inventory_of_the_products != None:
+        student_registered = creatingAStudent
+        chosen_product_id = inventory_of_the_products[0]['id']
+
+        feedback = client.post(f"/students/{student_registered['id']}/cart/",
+            params={"product_id": chosen_product_id})
+
+        assert feedback.status_code == 200
+        updated_cart = feedback.json()
+        assert len(updated_cart) > 0
+        assert updated_cart[-1]['id'] == chosen_product_id
