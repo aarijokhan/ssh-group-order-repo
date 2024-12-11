@@ -216,12 +216,14 @@ async def getStudents(id_student: str):
         print(f"{e}")
 
 
-def isStudentAlreadyInGroup(order_id: str, id_student: str) -> None:
+def isStudentAlreadyInGroup(order_id: str, id_student: str) -> bool:
     participants_of_group = fetchingGroupOrderParticipants(order_id)
 
     for participant in participants_of_group:
-        if participant['student_id'] == id_student:
-            raise HTTPException(status_code=400, detail="Student is already in the group!")
+        if participant.get('student_id') == id_student:
+            return True
+
+    return False
 
 
 def doesStudentExist(id_student: str) -> dict:
