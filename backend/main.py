@@ -1,5 +1,5 @@
-from http.client import HTTPException
-from fastapi import FastAPI
+# from http.client import HTTPException
+from fastapi import FastAPI, HTTPException
 import psycopg2
 import os
 import uuid
@@ -47,7 +47,7 @@ def fetchingGroupOrders(groupOrderId: str):
     try:
         connection = retrieveDatabaseConnection()
         with connection.cursor() as pointer:
-            pointer.execute("SELECT * FROM group_orders WHERE group_order_id = %s", (groupOrderId,))
+            pointer.execute("SELECT * FROM group_orders WHERE id = %s", (groupOrderId,))
             row = pointer.fetchone()
             if row: 
                 return GroupOrders(
@@ -81,7 +81,7 @@ def fetchingGroupOrderParticipants(groupOrderId: str):
         print(f"{e}")
         return []
     finally:
-        if 'connection' in locals:
+        if 'connection' in locals():
             connection.close()
 
 @app.get("/products")
@@ -93,7 +93,7 @@ studentsBeingAdded ={}
 @app.post("/students")
 async def createAStudent(name:str, amountInWallet: float):
     id_student = str(uuid.uuid4())
-    studentsBeingAdded[id_student] = Student(studentId = id_student, name = name, wallet = amountInWallet)
+    studentsBeingAdded[id_student] = Student(id = id_student, name = name, wallet = amountInWallet)
     return studentsBeingAdded[id_student]
 
 SAMPLE_STUDENTS = [
