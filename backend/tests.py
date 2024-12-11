@@ -26,4 +26,17 @@ def testCreatingAStudent(client):
 
 @pytest.fixture
 def creatingAGroupOrder(client):
-    pass
+    feedback = client.post("/group_orders/")
+    assert feedback.status_code == 200
+    return feedback.json()
+
+def testCreatingAGroupOrder(client):
+    feedback = client.post("/group_orders/")
+    assert feedback.status_code == 200
+
+    group_order = feedback.json()
+    
+    assert 'start_time' in group_order
+    assert 'order_id' in group_order
+    assert group_order['delivery_fee'] == 5.99
+
