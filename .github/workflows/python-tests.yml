@@ -25,7 +25,6 @@ jobs:
         pip install fastapi
         pip install httpx  
         pip install uuid
-        pip install os
         pip install datetime
         pip install http.client
     
