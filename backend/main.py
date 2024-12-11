@@ -3,30 +3,35 @@ from fastapi import FastAPI, HTTPException
 import psycopg2
 import os
 import uuid
-from datetime import datetime 
+from datetime import datetime
 
 app = FastAPI()
 
-# Default Root 
+
+# Default Root
 @app.get("/")
 def root():
-    return {"Hello":"There"}
+    return {"Hello": "There"}
+
 
 from models import (
     Products, Student, GroupOrders
 )
+
 # Code to connect to the database from Generative AI
 databasePassword = os.getenv('DATABASE_PASSWORD')
 
+
 def retrieveDatabaseConnection():
     return psycopg2.connect(
-        host = 'pg-2e6d194e-sepp-prototype.l.aivencloud.com',
+        host='pg-2e6d194e-sepp-prototype.l.aivencloud.com',
         port=25749,
         database='ssh',
         user='avnadmin',
-        password= 'AVNS_6TcZ6F1yK_cHP93dRi7' ,
-        sslmode='require' 
+        password='AVNS_6TcZ6F1yK_cHP93dRi7',
+        sslmode='require'
     )
+
 
 def fetchingProductsFromDatabase():
     try:
@@ -34,14 +39,16 @@ def fetchingProductsFromDatabase():
         with connection.cursor() as pointer:
             pointer.execute("SELECT * FROM products")
             return [
-                Products(id = str(row[0]), name = row[1], price = float(row[2]), category = row[3]) for row in pointer.fetchall()
+                Products(id=str(row[0]), name=row[1], price=float(row[2]), category=row[3]) for row in
+                pointer.fetchall()
             ]
     except Exception as e:
         print(f"{e}")
         return []
     finally:
-        if 'connection' in locals():    
+        if 'connection' in locals():
             connection.close()
+
 
 def fetchingGroupOrders(groupOrderId: str):
     try:
@@ -49,11 +56,11 @@ def fetchingGroupOrders(groupOrderId: str):
         with connection.cursor() as pointer:
             pointer.execute("SELECT * FROM group_orders WHERE id = %s", (groupOrderId,))
             row = pointer.fetchone()
-            if row: 
+            if row:
                 return GroupOrders(
-                    order_id = str(row[0]),
-                    start_time = row[1],
-                    delivery_fee = 5.99
+                    order_id=str(row[0]),
+                    start_time=row[1],
+                    delivery_fee=5.99
                 )
             return None
     except Exception as e:
@@ -63,12 +70,13 @@ def fetchingGroupOrders(groupOrderId: str):
         if 'connection' in locals():
             connection.close()
 
+
 def fetchingGroupOrderParticipants(groupOrderId: str):
     try:
         connection = retrieveDatabaseConnection()
         with connection.cursor() as pointer:
             pointer.execute("SELECT * FROM group_order_participants WHERE group_order_id = %s", (groupOrderId,))
-        return[
+        return [
             {
                 "studentId": row[1],
                 "studentName": row[2],
@@ -84,16 +92,28 @@ def fetchingGroupOrderParticipants(groupOrderId: str):
         if 'connection' in locals():
             connection.close()
 
+
 @app.get("/products")
 async def getProducts():
     return fetchingProductsFromDatabase()
 
-studentsBeingAdded ={}
 
+studentsBeingAdded = {}
+
+
+# @app.post("/students")
+# async def createAStudent(name: str, amountInWallet: float):
+#     id_student = str(uuid.uuid4())
+#     studentsBeingAdded[id_student] = Student(studentId=id_student, name=name, wallet=amountInWallet)
+#     return studentsBeingAdded[id_student]
 @app.post("/students")
-async def createAStudent(name:str, amountInWallet: float):
+async def createAStudent(name: str, amountInWallet: float):
     id_student = str(uuid.uuid4())
-    studentsBeingAdded[id_student] = Student(id = id_student, name = name, wallet = amountInWallet)
+    studentsBeingAdded[id_student] = Student(
+        id=id_student,  # Note the 'id', not 'studentId'
+        name=name,
+        wallet=amountInWallet
+    )
     return studentsBeingAdded[id_student]
 
 SAMPLE_STUDENTS = [
@@ -134,7 +154,8 @@ SAMPLE_STUDENTS = [
         ]
     }
 ]
-    
+
+
 @app.post("/group_orders/")
 async def createTheGroupOrder():
     order_id = str(uuid.uuid4())
@@ -148,7 +169,7 @@ async def createTheGroupOrder():
             )
 
             indexOfStudent = 0
-            while indexOfStudent < len (SAMPLE_STUDENTS):
+            while indexOfStudent < len(SAMPLE_STUDENTS):
                 studentsToInsert = SAMPLE_STUDENTS[indexOfStudent]
                 totalOfCart = sum(product['price'] for product in studentsToInsert['cart'])
                 indexOfStudent = indexOfStudent + 1
@@ -158,7 +179,8 @@ async def createTheGroupOrder():
                                 (group_order_id, student_id, student_name, cart_total, delivery_cost, total_cost)
                                 VALUES(%s, %s, %s, %s, %s, %s)
                                """,
-                               (order_id, studentsToInsert['id'], studentsToInsert['name'], totalOfCart, 1.5, totalOfCart + 1.5 )
+                               (order_id, studentsToInsert['id'], studentsToInsert['name'], totalOfCart, 1.5,
+                                totalOfCart + 1.5)
                                )
                 studentsBeingAdded[studentsToInsert['id']] = Student(
                     id=studentsToInsert['id'],
@@ -168,7 +190,7 @@ async def createTheGroupOrder():
                     group_order_id=order_id
                 )
                 connection.commit()
-            return{
+            return {
                 "order_id": order_id,
                 "start_time": datetime.now(),
                 "delivery_fee": 5.99,
@@ -184,6 +206,7 @@ async def createTheGroupOrder():
     except Exception as e:
         print(f"{e}")
 
+
 @app.get("/students/{student_id}")
 async def getStudents(id_student: str):
     try:
@@ -198,7 +221,8 @@ def isStudentAlreadyInGroup(order_id: str, id_student: str) -> None:
 
     for participant in participants_of_group:
         if participant['student_id'] == id_student:
-            raise HTTPException(status_code = 400, detail = "Student is already in the group!")
+            raise HTTPException(status_code=400, detail="Student is already in the group!")
+
 
 def doesStudentExist(id_student: str) -> dict:
     try:
@@ -206,17 +230,16 @@ def doesStudentExist(id_student: str) -> dict:
         return student
     except Exception as e:
         print("{e}")
-        raise HTTPException(status_code=400, detail = "Student has not been found!")
+        raise HTTPException(status_code=400, detail="Student has not been found!")
 
 
 @app.post("/group_orders/{order_id}/join/")
 async def joinTheGroupOrder(order_id: str, id_student: str):
-    
     group_order = fetchingGroupOrders(order_id)
 
     if not group_order:
-        raise HTTPException(status_code = 404, detail = "No group order with this id found!")
-    
+        raise HTTPException(status_code=404, detail="No group order with this id found!")
+
     student_joining_group = doesStudentExist(id_student)
 
     isStudentAlreadyInGroup(order_id, id_student)
@@ -235,25 +258,25 @@ async def joinTheGroupOrder(order_id: str, id_student: str):
                     order_id,
                     id_student,
                     student_joining_group.name,
-                    0, 
-                    0,  
-                    0  
+                    0,
+                    0,
+                    0
                 )
             )
             student_joining_group.group_order_id = order_id
 
             connection.commit()
 
-            return{
-                "order_id" : order_id,
-                "student_id" : id_student,
-                "message" : "Group order has been joined successfully" 
+            return {
+                "order_id": order_id,
+                "student_id": id_student,
+                "message": "Group order has been joined successfully"
             }
     except Exception as e:
         print(f"{e}")
-    
+
     finally:
         if connection:
             connection.close()
 
- 
+
