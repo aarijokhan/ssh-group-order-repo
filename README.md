@@ -28,20 +28,18 @@ The SSH Grocery Coordination System is a group grocery ordering feature integrat
 ### For Developers  
 1. Clone the repository:  
    ```bash  
-   git clone https://github.com/aarijokhan/SEPP-Assignment.git  
-   cd SEPP-Assignment
+   git clone https://github.com/aarijokhan/ssh-group-order-repo.git  
+   cd ssh-group-order-repo
 
 
 ## How to Use  
-1. **Open the SSH App** or **Console Table** interface.  
-2. Navigate to the "Group Order" feature.  
-3. Create or join a group using an invitation code.  
-4. Add items to the shared cart.  
-5. Confirm the order once all members have added their items.  
-6. Payments are processed automatically, and delivery updates are sent to all members.  
-
+1. Start/join group order 
+2. Browse marketplace  
+3. Add/Remove items from cart 
+4. Review cart  
+5. View the order summary  
+6. Checkout the cart
    
-
 
 ## Contribute  
 We welcome contributions! Here's how you can help:
@@ -82,9 +80,6 @@ We welcome contributions! Here's how you can help:
    - Provide a clear description of what you've done and why it's necessary.
    - Submit the pull request, and your changes will be reviewed for merging into the main repository.
 
-
-## Credits
-To be written
 
 ## License  
 This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) file for more details.  
