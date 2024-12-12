@@ -34,7 +34,7 @@ jobs:
     
     - name: Install dependencies
       run: |
-        cd ssh-group-order/backend
+        cd backend
         poetry install --no-interaction
     
     - name: Run Tests
