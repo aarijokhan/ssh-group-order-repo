@@ -18,7 +18,7 @@ The SSH Grocery Coordination System is a group grocery ordering feature integrat
 
 ## Tech/Frameworks Used  
 - **Frontend**: React Native  
-- **Backend**: Java (Spring Boot)  
+- **Backend**: python 
 - **Database**: PostgreSQL  
 - **Other Technologies**:  
   - REST APIs for partner integrations
