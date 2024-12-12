@@ -13,15 +13,13 @@ The SSH Grocery Coordination System is a group grocery ordering feature integrat
 - Shared Cart: Add items to a group cart, with clear tracking of individual contributions.
 - Automatic Cost Splitting: Delivery and service fees are divided equally among participants. 
 - Automated Payments: Costs are automatically deducted from individual in-app wallets.
-- Notifications: Receive alerts for scheduled orders, low wallet balances, and delivery updates.
-
 
 ## Tech/Frameworks Used  
 - **Frontend**: React Native  
-- **Backend**: Java (Spring Boot)  
+- **Backend**: Python  
 - **Database**: PostgreSQL  
 - **Other Technologies**:  
-  - REST APIs for partner integrations
+  - FastAPI 
 
 
  
