@@ -76,6 +76,7 @@ def fetchingGroupOrderParticipants(groupOrderId: str):
         connection = retrieveDatabaseConnection()
         with connection.cursor() as pointer:
             pointer.execute("SELECT * FROM group_order_participants WHERE group_order_id = %s", (groupOrderId,))
+            results = pointer.fetchall()
         return [
             {
                 "studentId": row[1],
@@ -83,7 +84,7 @@ def fetchingGroupOrderParticipants(groupOrderId: str):
                 "cart_total": row[3],
                 "delivery_cost": row[4]
             }
-            for row in pointer.fetchall()
+            for row in results
         ]
     except Exception as e:
         print(f"{e}")
@@ -101,16 +102,11 @@ async def getProducts():
 studentsBeingAdded = {}
 
 
-# @app.post("/students")
-# async def createAStudent(name: str, amountInWallet: float):
-#     id_student = str(uuid.uuid4())
-#     studentsBeingAdded[id_student] = Student(studentId=id_student, name=name, wallet=amountInWallet)
-#     return studentsBeingAdded[id_student]
 @app.post("/students")
 async def createAStudent(name: str, amountInWallet: float):
     id_student = str(uuid.uuid4())
     studentsBeingAdded[id_student] = Student(
-        id=id_student,  # Note the 'id', not 'studentId'
+        id=id_student,  
         name=name,
         wallet=amountInWallet
     )
@@ -216,12 +212,14 @@ async def getStudents(id_student: str):
         print(f"{e}")
 
 
-def isStudentAlreadyInGroup(order_id: str, id_student: str) -> None:
+def isStudentAlreadyInGroup(order_id: str, id_student: str) -> bool:
     participants_of_group = fetchingGroupOrderParticipants(order_id)
 
     for participant in participants_of_group:
-        if participant['student_id'] == id_student:
-            raise HTTPException(status_code=400, detail="Student is already in the group!")
+        if participant.get('student_id') == id_student:
+            return True
+
+    return False
 
 
 def doesStudentExist(id_student: str) -> dict:
@@ -240,28 +238,23 @@ async def joinTheGroupOrder(order_id: str, id_student: str):
     if not group_order:
         raise HTTPException(status_code=404, detail="No group order with this id found!")
 
-    student_joining_group = doesStudentExist(id_student)
+    student_joining_group = studentsBeingAdded.get(id_student)
 
     isStudentAlreadyInGroup(order_id, id_student)
 
     try:
         connection = retrieveDatabaseConnection()
         with connection.cursor() as pointer:
+            cart_total = 0
+            for product in student_joining_group.cart:
+                cart_total += product['price']
+            delivery_cost = 1.5
+            total_cost = cart_total + delivery_cost
             pointer.execute(
                 """
-                INSERT INTO group_order_participants (
-                    group_order_id, student_id, student_name,
-                    cart_total, delivery_cost, total_cost
-                ) VALUES (%s, %s, %s, %s, %s, %s)
+                INSERT INTO group_order_participants (group_order_id, student_id, student_name, cart_total, delivery_cost, total_cost) VALUES (%s, %s, %s, %s, %s, %s)
                 """,
-                (
-                    order_id,
-                    id_student,
-                    student_joining_group.name,
-                    0,
-                    0,
-                    0
-                )
+                (order_id, id_student, student_joining_group.name, 0, 0, 0)
             )
             student_joining_group.group_order_id = order_id
 
@@ -279,4 +272,72 @@ async def joinTheGroupOrder(order_id: str, id_student: str):
         if connection:
             connection.close()
 
+@app.post("/students/{student_id}/cart/")
+async def addingToTheCart(student_id: str, product_id: str):
+    student_registered = studentsBeingAdded.get(student_id)
 
+    if not student_registered:
+        raise HTTPException(status_code=404, detail="Student not found")
+    
+    products = fetchingProductsFromDatabase()
+    product_corpus = None
+    for product in products:
+        if product.id == product_id:
+            product_corpus = product
+            break
+    
+    if not product_corpus:
+        raise HTTPException(status_code=404, detail="Product not found")
+    
+    initial_cart_total = 0
+    for product in student_registered.cart:
+        initial_cart_total += product.price
+    student_registered.cart.append(product_corpus)
+
+    cart_total = initial_cart_total
+
+    try:
+        connection = retrieveDatabaseConnection()
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "UPDATE group_order_participants SET cart_total = %s WHERE student_id = %s AND group_order_id = %s",
+                (cart_total + product_corpus.price, student_id, student_registered.group_order_id)
+            )
+            connection.commit()
+        return student_registered.cart
+    except Exception as e:
+        raise HTTPException(status_code=500, detail="Error adding to cart")
+
+@app.post("/students/{student_id}/checkout/")
+async def checkingOutOfOrder (student_id:str):
+    student_registered = studentsBeingAdded.get(student_id)
+
+    if not student_registered or not student_registered.group_order_id:
+        raise HTTPException(status_code=400, detail="Student not part of a group order")
+    
+    group_order = fetchingGroupOrders(student_registered.group_order_id)
+    participants = fetchingGroupOrderParticipants(student_registered.group_order_id)
+
+    cart_total_for_student = 0
+    for product in student_registered.cart:
+        cart_total_for_student += product.price
+    
+    delivery_cost = group_order.delivery_fee / len(participants)
+    total_cost_for_student = cart_total_for_student + delivery_cost
+
+    if student_registered.wallet < total_cost_for_student:
+        raise HTTPException(status_code=400, detail="Not enough funds!")
+
+    student_registered.wallet -= total_cost_for_student
+    student_registered.cart.clear()
+
+    try:
+        connection = retrieveDatabaseConnection()
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "UPDATE group_order_participants SET cart_total = 0 WHERE student_id = %s AND group_order_id = %s", (student_id, student_registered.group_order_id)
+            )
+            connection.commit()
+        return {"wallet": student_registered.wallet, "message": "Checkout successful"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail="Error during checkout")
