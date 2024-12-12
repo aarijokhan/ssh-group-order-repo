@@ -1,74 +1,116 @@
-import { Image, StyleSheet, Platform } from 'react-native';
+import React from 'react';
+import { View, Text, StyleSheet, SafeAreaView, ScrollView, Image, TouchableOpacity } from 'react-native';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { Ionicons } from '@expo/vector-icons';
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+type RootStackParamList = {
+  'group-order': undefined;
+  'explore' : undefined;
+  'notifications': undefined;
+}
+
 
 export default function HomeScreen() {
+const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12'
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+    <SafeAreaView style={styles.safeArea}>
+      <ScrollView contentContainerStyle={styles.container}>
+        <View style={styles.header}>
+          <Image
+            source={require('/Users/Fizan/Downloads/SshFrontEnd/SSH/ssh-group-order-repo/assets/images/IMG_6604.jpg')}
+            style={styles.logo}
+          />
+          <Text style={styles.headerText}>Welcome to SSH!</Text>
+          <TouchableOpacity
+            style={styles.notificationIcon}
+            onPress={() => navigation.navigate('notifications')}>
+          <Ionicons name="notifications-outline" size={28} color="#1d3d47"></Ionicons>
+          </TouchableOpacity>
+        </View>
+  <View style={styles.featureSection}>
+  <Text style={styles.featureTitle}>Group Order</Text>
+  <Text style={styles.featureDescription}>Simplify your grocery shopping with flatmates. Create or join a group, share carts, and split costs effortlessly.</Text>
+  <TouchableOpacity
+    style={styles.actionButton}
+    onPress={() => navigation.navigate('group-order')}>
+    <Text style={styles.actionButtonText}>Start a Group Order</Text>
+  </TouchableOpacity>
+  </View>
+  <View style={styles.featureSection}>
+          <Text style={styles.featureTitle}>Explore SSH Features</Text>
+          <Text style={styles.featureDescription}>Discover SSH's smart solutions tailored for student life. Learn more about how we make living in student accommodations smarter and more efficient.</Text>
+        </View>
+  </ScrollView> 
+  </SafeAreaView> 
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#ffffff',
+  },
+  container: {
+    flex: 1,
     alignItems: 'center',
-    gap: 8,
+    padding: 16,
   },
-  stepContainer: {
-    gap: 8,
+  headerText: {
+    fontSize: 20, 
+    fontWeight: 'bold',
+    color: '#1d3d47',
+    flex: 1,
+    textAlign: 'center',
+  },
+  logo: { 
+    width: 40,
+    height: 40,
+    resizeMode: 'contain',
+  },
+  header: {
+    flexDirection: 'row', 
+    alignItems: 'center', 
+    justifyContent: 'space-between',
+    marginBottom: 24,
+    paddingHorizontal: 16, 
+  },
+  featureSection: {
+    backgroundColor: '#ffffff',
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 16,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 8,
+},
+  featureTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
     marginBottom: 8,
+    color: '#333333',
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  featureDescription: {
+    fontSize: 14,
+    color: '#666666',
+    marginBottom: 16,
   },
-});
+  actionButton: {
+    backgroundColor: '#1d3d47',
+    borderRadius: 8,
+    paddingVertical: 12,
+    alignItems: 'center',
+  },
+  actionButtonText: {
+    color: '#ffffff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  notificationIcon: {
+    width: 24,
+    height: 24,
+    resizeMode: 'contain', 
+  },
+}
+);
