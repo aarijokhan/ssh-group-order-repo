@@ -39,5 +39,6 @@ jobs:
     
     - name: Run Tests
       run: |
-        poetry run pytest ${{ github.workspace }}/backend/tests.py
+        cd backend
+        poetry run pytest tests.py
   
